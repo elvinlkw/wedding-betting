@@ -9,9 +9,28 @@ const router = express.Router();
  */
 router.get("/", async (req, res) => {
   try {
-    const allQuestions = await pool.query(
-      "SELECT question_id, question_text FROM questions WHERE is_enabled = TRUE;"
-    );
+    const includeChoices = req.query.includeChoices === "true";
+
+    let query;
+    if (includeChoices) {
+      query = `SELECT 
+        q.question_id,
+        q.question_text,
+        json_agg(
+          json_build_object(
+            'choice_id', qc.choice_id, 
+            'choice_text', qc.choice_text
+          )
+        ) AS choices 
+      FROM questions q
+      LEFT JOIN question_choices qc ON q.question_id = qc.question_id
+      GROUP BY q.question_id
+      ORDER BY q.question_id ASC;`;
+    } else {
+      query = `SELECT question_id, question_text FROM questions WHERE is_enabled = TRUE;`;
+    }
+
+    const allQuestions = await pool.query(query);
     const response = {
       count: allQuestions.rowCount,
       data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
@@ -38,6 +57,45 @@ router.post("/", async (req, res) => {
       [text, isActive]
     );
     res.json(newQuestion.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/**
+ * Get all choices for a question
+ */
+router.get("/:id/choices", async (req, res) => {
+  try {
+    const questionId = req.params.id;
+
+    const question = await pool.query(
+      `SELECT question_text FROM questions WHERE question_id = $1`,
+      [questionId]
+    );
+    if (!question.rowCount) {
+      console.error("Invalid question id");
+      return res.status(404).json({
+        message: `Invalid question id`,
+      });
+    }
+
+    const allChoices = await pool.query(
+      `SELECT * FROM question_choices WHERE question_id = $1`,
+      [questionId]
+    );
+
+    const response = {
+      count: allChoices.rowCount,
+      data: {
+        question: question.rows[0].question_text,
+        choices: allChoices.rows.map((row) =>
+          camelcaseKeys(row, { deep: true })
+        ),
+      },
+    };
+    res.json(response);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: err.message });

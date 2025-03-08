@@ -5,25 +5,7 @@ import camelcaseKeys from "camelcase-keys";
 const router = express.Router();
 
 /**
- * Get all active questions
- */
-router.get("/", async (req, res) => {
-  try {
-    const allChoices = await pool.query("SELECT * FROM question_choices;");
-
-    const response = {
-      count: allChoices.rowCount,
-      data: allChoices.rows.map((row) => camelcaseKeys(row, { deep: true })),
-    };
-    res.json(response);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/**
- * Create a question
+ * Create a choice
  */
 router.post("/", async (req, res) => {
   try {
