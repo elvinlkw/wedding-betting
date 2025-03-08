@@ -102,4 +102,38 @@ router.get("/:id/choices", async (req, res) => {
   }
 });
 
+/**
+ * Create a choice for a question
+ */
+router.post("/:id/choices", async (req, res) => {
+  try {
+    const questionId = req.params.id;
+
+    const question = await pool.query(
+      `SELECT question_text FROM questions WHERE question_id = $1`,
+      [questionId]
+    );
+    if (!question.rowCount) {
+      console.error("Invalid question id");
+      return res.status(404).json({
+        message: `Invalid question id`,
+      });
+    }
+
+    const { isRightAnswer = false, text } = req.body;
+    const newQuestion = await pool.query(
+      `INSERT INTO question_choices (
+      question_id, is_right_answer, choice_text
+    ) VALUES (
+      $1, $2, $3
+    ) RETURNING *`,
+      [questionId, isRightAnswer, text]
+    );
+    res.json(newQuestion.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;
