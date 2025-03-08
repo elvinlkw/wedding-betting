@@ -8,12 +8,71 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const allAnswers = await pool.query("SELECT * FROM user_answers;");
-    const response = {
-      count: allAnswers.rowCount,
-      data: allAnswers.rows.map((row) => camelcaseKeys(row, { deep: true })),
-    };
-    res.json(response);
+    const userId = req.query.userId;
+
+    let query;
+    if (userId) {
+      const user = await pool.query(
+        `SELECT first_name, last_name FROM users WHERE user_id = $1`,
+        [userId]
+      );
+      if (!user.rowCount) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      query = pool.query(
+        `
+        SELECT 
+          ua.question_id,
+          q.question_text,
+          ua.choice_id,
+          qc.choice_text,
+          qc.is_right_answer
+        FROM user_answers ua
+        LEFT JOIN questions q ON q.question_id = ua.question_id
+        LEFT JOIN question_choices qc ON qc.choice_id = ua.choice_id
+        WHERE ua.user_id = $1`,
+        [userId]
+      );
+      const userAnswers = await query;
+      const response = {
+        userId: user.rows[0].user_id,
+        firstName: user.rows[0].first_name,
+        lastName: user.rows[0].last_name,
+        answers: userAnswers.rows.map((row) =>
+          camelcaseKeys(row, { deep: true })
+        ),
+      };
+      res.json(response);
+    } else {
+      query = pool.query(`
+        SELECT 
+          u.user_id,
+          u.first_name,
+          u.last_name,
+          json_agg(
+            json_build_object(
+              'question_id', ua.question_id,
+              'question_text', q.question_text,
+              'choice_id', qc.choice_id, 
+              'choice_text', qc.choice_text,
+              'is_right_answer', qc.is_right_answer
+            )
+          ) AS answers
+        FROM users u
+        LEFT JOIN user_answers ua ON u.user_id = ua.user_id
+        LEFT JOIN questions q ON q.question_id = ua.question_id
+        LEFT JOIN question_choices qc ON qc.choice_id = ua.choice_id
+        GROUP BY u.user_id
+        `);
+      const allAnswers = await query;
+      const response = {
+        count: allAnswers.rowCount,
+        data: allAnswers.rows.map((row) => camelcaseKeys(row, { deep: true })),
+      };
+      res.json(response);
+    }
   } catch (err) {
     const error = err as Error;
     console.error(error.message);
