@@ -1,10 +1,10 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import camelcaseKeys from "camelcase-keys";
-import pool from "../db.mjs";
+import pool from "../db";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const answers = await pool.query(
       `SELECT 
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 
     res.json(camelCasedAnswers);
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     res.status(500).send("Server error");
   }
 });

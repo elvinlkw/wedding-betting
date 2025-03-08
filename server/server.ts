@@ -5,7 +5,7 @@ import {
   answersRoute,
   questionsRoute,
   userAnswersRoute,
-} from "./routes/index.mjs";
+} from "./src/routes/index.js";
 
 const app = express();
 const port = process.env.PORT || 8080;

@@ -1,6 +1,6 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import camelcaseKeys from "camelcase-keys";
-import pool from "../db.mjs";
+import pool from "../db";
 
 const router = express.Router();
 
@@ -37,8 +37,9 @@ router.get("/", async (req, res) => {
     };
     res.json(response);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -58,15 +59,16 @@ router.post("/", async (req, res) => {
     );
     res.json(newQuestion.rows[0]);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
 /**
  * Get all choices for a question
  */
-router.get("/:id/choices", async (req, res) => {
+router.get("/:id/choices", async (req: Request, res: Response) => {
   try {
     const questionId = req.params.id;
 
@@ -76,9 +78,10 @@ router.get("/:id/choices", async (req, res) => {
     );
     if (!question.rowCount) {
       console.error("Invalid question id");
-      return res.status(404).json({
+      res.status(404).json({
         message: `Invalid question id`,
       });
+      return;
     }
 
     const allChoices = await pool.query(
@@ -97,15 +100,16 @@ router.get("/:id/choices", async (req, res) => {
     };
     res.json(response);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
 /**
  * Create a choice for a question
  */
-router.post("/:id/choices", async (req, res) => {
+router.post("/:id/choices", async (req: Request, res: Response) => {
   try {
     const questionId = req.params.id;
 
@@ -115,9 +119,10 @@ router.post("/:id/choices", async (req, res) => {
     );
     if (!question.rowCount) {
       console.error("Invalid question id");
-      return res.status(404).json({
+      res.status(404).json({
         message: `Invalid question id`,
       });
+      return;
     }
 
     const { isRightAnswer = false, text } = req.body;
@@ -131,8 +136,9 @@ router.post("/:id/choices", async (req, res) => {
     );
     res.json(newQuestion.rows[0]);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: err.message });
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 

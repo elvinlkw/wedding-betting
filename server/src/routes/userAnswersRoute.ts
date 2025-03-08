@@ -1,26 +1,27 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import camelcaseKeys from "camelcase-keys";
-import pool from "../db.mjs";
+import pg from "pg";
+import pool from "../db";
 
+const { DatabaseError } = pg;
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const allAnswers = await pool.query(
-      "SELECT first_name, last_name FROM user_answers;"
-    );
+    const allAnswers = await pool.query("SELECT * FROM user_answers;");
     const response = {
       count: allAnswers.rowCount,
-      data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
+      data: allAnswers.rows.map((row) => camelcaseKeys(row, { deep: true })),
     };
     res.json(response);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, answers } = req.body;
 
@@ -29,9 +30,10 @@ router.post("/", async (req, res) => {
       [firstName, lastName]
     );
     if (existUser.rowCount) {
-      return res.status(409).json({
+      res.status(409).json({
         message: "A response has already been submitted under this user",
       });
+      return;
     }
 
     const newUser = await pool.query(
@@ -40,33 +42,37 @@ router.post("/", async (req, res) => {
     );
     const userId = newUser.rows[0].user_id;
 
-    const promises = answers.map(({ questionId, choiceId }) => {
-      return pool.query(
-        `INSERT INTO user_answers (
+    const promises = answers.map(
+      ({ questionId, choiceId }: { questionId: number; choiceId: number }) => {
+        return pool.query(
+          `INSERT INTO user_answers (
         user_id, question_id, choice_id
         ) VALUES (
           $1, $2, $3
         ) RETURNING *`,
-        [userId, questionId, choiceId]
-      );
-    });
+          [userId, questionId, choiceId]
+        );
+      }
+    );
 
     await Promise.all(promises);
     res.json({
       message: "Responses submitted successfully",
     });
   } catch (err) {
-    console.error(err.message);
+    const error = err as Error;
+    console.error(error.message);
 
-    if (err.code === "23502") {
-      return res.status(400).json({
+    if (error instanceof DatabaseError && error.code === "23502") {
+      res.status(400).json({
         status: "NOT_NULL_VIOLATION",
         statusCode: 400,
-        message: `"${err.column}" cannot be empty`,
+        message: `"${error.column}" cannot be empty`,
       });
+      return;
     }
 
-    res.status(500).json(err);
+    res.status(500).json(error);
   }
 });
 

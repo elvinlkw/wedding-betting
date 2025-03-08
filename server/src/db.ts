@@ -1,5 +1,5 @@
-import pkg from "pg";
-const { Pool } = pkg;
+import pg, { PoolConfig } from "pg";
+const { Pool } = pg;
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -7,6 +7,6 @@ const pool = new Pool({
   host: "localhost",
   port: 5432,
   database: process.env.POSTGRES_DB,
-});
+} as PoolConfig);
 
 export default pool;
