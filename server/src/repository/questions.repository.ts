@@ -1,19 +1,34 @@
-import pool from "../db";
+import { QueryResult } from 'pg';
+import pool from '../db';
 
-export const findAll = () => {
-  return pool.query(
-    `SELECT question_id, question_text FROM questions WHERE is_enabled = TRUE;`
-  );
+export type QuestionModel = {
+  question_id: number;
+  question_text: string;
+  is_enabled: true;
 };
 
-export const findById = (id: string) => {
-  return pool.query(
-    `SELECT question_text FROM questions WHERE question_id = $1`,
-    [id]
-  );
+export type ChoicesModel = {
+  choice_id: number;
+  question_id: number;
+  is_right_answer: boolean;
+  choice_text: string;
 };
 
-export const findAllWithChoices = () => {
+export const findAll = (): Promise<QueryResult<QuestionModel>> => {
+  return pool.query(`SELECT * FROM questions WHERE is_enabled = TRUE;`);
+};
+
+export const findById = (id: string): Promise<QueryResult<QuestionModel>> => {
+  return pool.query(`SELECT * FROM questions WHERE question_id = $1`, [id]);
+};
+
+type QuestionWithChoicesResponse = {
+  choices: ChoicesModel[];
+} & QuestionModel;
+
+export const findAllWithChoices = (): Promise<
+  QueryResult<QuestionWithChoicesResponse>
+> => {
   return pool.query(`SELECT 
     q.question_id,
     q.question_text,
@@ -33,8 +48,8 @@ export const findAllWithChoices = () => {
 };
 
 type QuestionBody = {
-  text: string;
-  isActive?: boolean;
+  text: QuestionModel['question_text'];
+  isActive?: QuestionModel['is_enabled'];
 };
 
 export const insert = ({ text, isActive = true }: QuestionBody) => {

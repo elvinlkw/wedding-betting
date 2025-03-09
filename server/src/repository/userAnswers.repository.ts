@@ -1,13 +1,14 @@
 import { QueryResult } from 'pg';
 import pool from '../db';
 import { UserModel } from './users.repository';
+import { ChoicesModel, QuestionModel } from './questions.repository';
 
 type UserAnswerModel = {
-  question_id: number;
-  question_text: string;
-  choice_id: number;
-  choice_text: string;
-  is_right_answer: boolean;
+  question_id: QuestionModel['question_id'];
+  question_text: QuestionModel['question_text'];
+  choice_id: ChoicesModel['choice_id'];
+  choice_text: ChoicesModel['choice_text'];
+  is_right_answer: ChoicesModel['is_right_answer'];
 };
 
 type UserAnswerResponse = {
@@ -49,8 +50,8 @@ export const findAllByUserId = (
 
 type InsertBody = {
   userId: UserModel['user_id'];
-  questionId: number;
-  choiceId: number;
+  questionId: QuestionModel['question_id'];
+  choiceId: ChoicesModel['choice_id'];
 };
 
 export const insert = ({ userId, questionId, choiceId }: InsertBody) => {
