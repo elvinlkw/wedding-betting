@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config.js";
 import {
-  answersRoute,
   questionsRoute,
   userAnswersRoute,
 } from "./src/routes/index.js";
@@ -16,7 +15,6 @@ app.use(express.json());
 
 // routes
 app.use("/questions", questionsRoute);
-app.use("/answers", answersRoute);
 app.use("/user-answers", userAnswersRoute);
 
 app.listen(port, () => {
