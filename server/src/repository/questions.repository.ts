@@ -17,12 +17,15 @@ export const findAllWithChoices = () => {
   return pool.query(`SELECT 
     q.question_id,
     q.question_text,
-    json_agg(
-      json_build_object(
-        'choice_id', qc.choice_id, 
-        'choice_text', qc.choice_text
+    CASE 
+      WHEN COUNT(qc.choice_id) = 0 THEN '[]'::json
+      ELSE json_agg(
+        json_build_object(
+          'choice_id', qc.choice_id, 
+          'choice_text', qc.choice_text
+        )
       )
-    ) AS choices 
+    END AS choices 
   FROM questions q
   LEFT JOIN question_choices qc ON q.question_id = qc.question_id
   GROUP BY q.question_id
