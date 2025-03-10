@@ -1,4 +1,6 @@
-import questionsRoute from "./questionsRoute";
-import userAnswersRoute from "./userAnswersRoute";
+import questionsRoute from './questionsRoute';
+import userAnswersRoute from './userAnswersRoute';
+import adminUserRoute from './adminUsersRoute';
+import authRoute from './authRoute';
 
-export { questionsRoute, userAnswersRoute };
+export { questionsRoute, userAnswersRoute, adminUserRoute, authRoute };

@@ -1,25 +1,26 @@
-import express from "express";
-import { questionsController } from "../controllers";
+import express from 'express';
+import { questionsController } from '../controllers';
+import { auth } from '../middleware';
 const router = express.Router();
 
 /**
  * Get all active questions
  */
-router.get("/", questionsController.getAllQuestions);
+router.get('/', questionsController.getAllQuestions);
 
 /**
  * Create a question
  */
-router.post("/", questionsController.create);
+router.post('/', auth, questionsController.create);
 
 /**
  * Get all choices for a question
  */
-router.get("/:id/choices", questionsController.getChoicesByQuestionId);
+router.get('/:id/choices', questionsController.getChoicesByQuestionId);
 
 /**
  * Create a choice for a question
  */
-router.post("/:id/choices", questionsController.createChoice);
+router.post('/:id/choices', auth, questionsController.createChoice);
 
 export default router;
