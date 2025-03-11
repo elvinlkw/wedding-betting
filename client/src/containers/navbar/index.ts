@@ -1,2 +1,1 @@
-export { Login } from './login';
 export { Navbar } from './navbar';

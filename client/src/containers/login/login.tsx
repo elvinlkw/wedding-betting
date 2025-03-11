@@ -2,11 +2,12 @@ import { Button, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { type LoginRequest, useAuthLogin } from '../../api/auth';
 import { object, string } from 'yup';
+import { use, useEffect } from 'react';
 import { AuthContext } from '../../context';
 import Cookies from 'js-cookie';
+import { PATHS } from '../../routing';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { use } from 'react';
 import { useNavigate } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -46,6 +47,12 @@ export const Login = () => {
 
   const auth = use(AuthContext);
 
+  useEffect(() => {
+    if (Cookies.get('jwttoken')) {
+      navigate(PATHS.ADMIN_PAGE);
+    }
+  }, [auth?.authUser, navigate]);
+
   const submit = (data: LoginRequest) => {
     mutate(data, {
       onSuccess: (response) => {
@@ -55,7 +62,7 @@ export const Login = () => {
           id: response.id,
         });
         Cookies.set('jwttoken', response.token);
-        navigate('/page');
+        navigate(PATHS.ADMIN_PAGE);
       },
       onError: (err) => {
         console.error(err);

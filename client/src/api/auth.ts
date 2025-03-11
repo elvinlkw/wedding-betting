@@ -38,5 +38,6 @@ export const useAuth = () => {
   return useQuery({
     queryKey: ['auth'],
     queryFn: getUser,
+    enabled: !!Cookies.get('jwttoken'),
   });
 };

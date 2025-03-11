@@ -1,15 +1,15 @@
-import { NavLink, Route, Routes } from 'react-router';
-import { useEffect, useState } from 'react';
-
+import { NavLink, Outlet, Route, Routes } from 'react-router';
 import { AuthContext } from './context';
+
 import { type AuthUser } from './types/auth';
 import { Login } from './pages';
+import { Navbar } from './containers';
+import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
-import { Spinner } from './components/spinner/spinner';
 import Table from './table.component';
 
-import { useAuth } from './api/auth';
 import { useQuestions } from './api/services/question';
+import { useState } from 'react';
 
 const Page = () => {
   const { isLoading, data } = useQuestions();
@@ -26,18 +26,7 @@ const Page = () => {
 };
 
 function App() {
-  const { data, isLoading } = useAuth();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    if (data) {
-      setAuthUser(data);
-    }
-  }, [data]);
-
-  if (isLoading || !authUser) {
-    return <Spinner />;
-  }
 
   return (
     <AuthContext.Provider value={{ authUser, setAuthUser }}>
@@ -48,20 +37,30 @@ function App() {
             <div>
               {authUser?.id}
               <div>
-                <NavLink to="/page">Page</NavLink>
+                <NavLink to="/admin">Admin</NavLink>
               </div>
             </div>
           }
         />
         <Route path="/login" element={<Login />} />
         <Route
-          path="/page"
+          path={PATHS.ADMIN_PAGE}
           element={
-            <ProtectedRoute>
-              <Page />
-            </ProtectedRoute>
+            <>
+              <Navbar />
+              <Outlet />
+            </>
           }
-        />
+        >
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Page />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
     </AuthContext.Provider>
