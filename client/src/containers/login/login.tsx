@@ -1,11 +1,22 @@
-import { Button, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Typography,
+} from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { type LoginRequest, useAuthLogin } from '../../api/auth';
 import { object, string } from 'yup';
-import { use, useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import { AuthContext } from '../../context';
 import Cookies from 'js-cookie';
 import { PATHS } from '../../routing';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router';
@@ -38,14 +49,20 @@ const formFieldCss = css({
 
 export const Login = () => {
   const navigate = useNavigate();
+  const auth = use(AuthContext);
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const { control, setError, handleSubmit, setFocus } = useForm({
     mode: 'onBlur',
+    defaultValues: {
+      username: '',
+      password: '',
+    },
     resolver: yupResolver(schema),
   });
 
   const { mutate } = useAuthLogin();
-
-  const auth = use(AuthContext);
 
   useEffect(() => {
     if (Cookies.get('jwttoken')) {
@@ -57,7 +74,6 @@ export const Login = () => {
     mutate(data, {
       onSuccess: (response) => {
         console.log('Login successful:', response);
-        // Handle successful login, e.g., store token, redirect, etc.
         auth?.setAuthUser({
           id: response.id,
         });
@@ -83,15 +99,31 @@ export const Login = () => {
         control={control}
         name="username"
         render={({ field, fieldState }) => (
-          <TextField
-            {...field}
-            sx={formFieldCss}
-            type="text"
-            label="Username"
-            error={!!fieldState.error}
-            variant="standard"
-            helperText={fieldState.error?.message}
-          />
+          <Box sx={{ width: '100%' }}>
+            <FormControl sx={formFieldCss} variant="standard">
+              <InputLabel
+                htmlFor="username"
+                sx={{
+                  color: fieldState.error
+                    ? 'rgb(211, 47, 47)'
+                    : 'rgba(0, 0, 0, 0.6)',
+                }}
+              >
+                Username
+              </InputLabel>
+              <Input
+                {...field}
+                id="username"
+                type={showPassword ? 'text' : 'password'}
+                error={!!fieldState.error}
+              />
+            </FormControl>
+            {fieldState.error && (
+              <Typography sx={{ fontSize: 14, color: 'rgb(211, 47, 47)' }}>
+                {fieldState.error?.message}
+              </Typography>
+            )}
+          </Box>
         )}
       />
 
@@ -99,15 +131,44 @@ export const Login = () => {
         control={control}
         name="password"
         render={({ field, fieldState }) => (
-          <TextField
-            {...field}
-            sx={formFieldCss}
-            type="password"
-            label="Password"
-            error={!!fieldState.error}
-            variant="standard"
-            helperText={fieldState.error?.message}
-          />
+          <Box sx={{ width: '100%' }}>
+            <FormControl sx={formFieldCss} variant="standard">
+              <InputLabel
+                htmlFor="password"
+                sx={{
+                  color: fieldState.error
+                    ? 'rgb(211, 47, 47)'
+                    : 'rgba(0, 0, 0, 0.6)',
+                }}
+              >
+                Password
+              </InputLabel>
+
+              <Input
+                {...field}
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                error={!!fieldState.error}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword
+                          ? 'hide the password'
+                          : 'display the password'
+                      }
+                      onClick={() => setShowPassword((pw) => !pw)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <Typography sx={{ fontSize: 14, color: 'rgb(211, 47, 47)' }}>
+              {fieldState.error?.message}
+            </Typography>
+          </Box>
         )}
       />
 

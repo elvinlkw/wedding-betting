@@ -1,7 +1,8 @@
-import * as React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
+import React, { use } from 'react';
 import AdbIcon from '@mui/icons-material/Adb';
 import AppBar from '@mui/material/AppBar';
+import { AuthContext } from '../../context';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -37,6 +38,7 @@ const LogoLink = styled(Link)({
 
 export const Navbar = () => {
   const navigate = useNavigate();
+  const auth = use(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -61,7 +63,8 @@ export const Navbar = () => {
 
   const handleLogOut = () => {
     Cookies.remove('jwttoken', { path: '/' });
-    navigate(PATHS.LANDING_PAGE);
+    auth?.setAuthUser(null);
+    navigate(PATHS.LOGIN_PAGE);
   };
 
   return (
