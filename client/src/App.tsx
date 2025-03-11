@@ -19,7 +19,6 @@ function App() {
           index
           element={
             <div>
-              {authUser?.id}
               <div>
                 <NavLink to="/admin">Admin</NavLink>
               </div>

@@ -1,6 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router';
 import React, { use } from 'react';
-import AdbIcon from '@mui/icons-material/Adb';
 import AppBar from '@mui/material/AppBar';
 import { AuthContext } from '../../context';
 import Avatar from '@mui/material/Avatar';
@@ -16,6 +15,7 @@ import { PATHS } from '../../routing';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import WcIcon from '@mui/icons-material/Wc';
 import styled from '@emotion/styled';
 
 const pages = [
@@ -62,8 +62,8 @@ export const Navbar = () => {
   };
 
   const handleLogOut = () => {
-    Cookies.remove('jwttoken', { path: '/' });
     auth?.setAuthUser(null);
+    Cookies.remove('jwttoken', { path: '/' });
     navigate(PATHS.LOGIN_PAGE);
   };
 
@@ -72,7 +72,7 @@ export const Navbar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LogoLink to={PATHS.LANDING_PAGE}>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <WcIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -128,7 +128,7 @@ export const Navbar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <WcIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap

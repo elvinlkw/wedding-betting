@@ -6,9 +6,11 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  Stack,
   Typography,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router';
 import { type LoginRequest, useAuthLogin } from '../../api/auth';
 import { object, string } from 'yup';
 import { use, useEffect, useState } from 'react';
@@ -19,7 +21,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const schema = object({
@@ -99,7 +100,15 @@ export const Login = () => {
         control={control}
         name="username"
         render={({ field, fieldState }) => (
-          <Box sx={{ width: '100%' }}>
+          <Box
+            sx={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
             <FormControl sx={formFieldCss} variant="standard">
               <InputLabel
                 htmlFor="username"
@@ -114,12 +123,17 @@ export const Login = () => {
               <Input
                 {...field}
                 id="username"
-                type={showPassword ? 'text' : 'password'}
+                type={'text'}
                 error={!!fieldState.error}
               />
             </FormControl>
             {fieldState.error && (
-              <Typography sx={{ fontSize: 14, color: 'rgb(211, 47, 47)' }}>
+              <Typography
+                sx={css(
+                  { ...formFieldCss },
+                  { fontSize: 14, color: 'rgb(211, 47, 47)' }
+                )}
+              >
                 {fieldState.error?.message}
               </Typography>
             )}
@@ -131,7 +145,15 @@ export const Login = () => {
         control={control}
         name="password"
         render={({ field, fieldState }) => (
-          <Box sx={{ width: '100%' }}>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              flexDirection: 'column',
+            }}
+          >
             <FormControl sx={formFieldCss} variant="standard">
               <InputLabel
                 htmlFor="password"
@@ -165,16 +187,36 @@ export const Login = () => {
                 }
               />
             </FormControl>
-            <Typography sx={{ fontSize: 14, color: 'rgb(211, 47, 47)' }}>
+            <Typography
+              sx={css(
+                { ...formFieldCss },
+                { fontSize: 14, color: 'rgb(211, 47, 47)' }
+              )}
+            >
               {fieldState.error?.message}
             </Typography>
           </Box>
         )}
       />
 
-      <Button type="submit" sx={formFieldCss} variant="contained">
-        Login
-      </Button>
+      <Stack
+        sx={css(
+          {
+            ...formFieldCss,
+          },
+          { gap: '8px', display: 'grid', gridTemplateColumns: '1fr 1fr' }
+        )}
+        direction="row"
+      >
+        <Link to="/" style={{ width: '100%' }}>
+          <Button sx={{ width: '100%' }} variant="contained" color="inherit">
+            Back to Main
+          </Button>
+        </Link>
+        <Button type="submit" variant="contained">
+          Login
+        </Button>
+      </Stack>
     </Form>
   );
 };
