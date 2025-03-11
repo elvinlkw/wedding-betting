@@ -29,9 +29,6 @@ const CustomChip = styled(Chip)({
 export const Accordion = ({ data }: { data: Question[] }) => {
   return (
     <div>
-      <Typography component="h2" fontSize={24} align="center">
-        List of Questions
-      </Typography>
       {data.map((question) => (
         <MuiAccordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
