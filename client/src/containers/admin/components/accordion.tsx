@@ -18,9 +18,10 @@ const CustomChip = styled(Chip)({
     top: -10,
     background: 'inherit',
     borderRadius: '50%',
+    transition: 'opacity 0.3s ease',
   },
+
   '&:hover .MuiSvgIcon-root': {
-    transform: 'translateX(0)',
     opacity: 1,
   },
 });
