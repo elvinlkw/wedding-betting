@@ -3,8 +3,27 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import pool from '../db';
 import { check, validationResult } from 'express-validator';
+import { auth } from '../middleware';
 
 const router = express.Router();
+
+router.get('/', auth, async (req: Request, res: Response) => {
+  try {
+    const user = await pool.query(
+      `SELECT admin_user_id, username FROM admin_user WHERE admin_user_id = $1`,
+      [req.user?.id]
+    );
+    res.json({
+      id: req.user?.id,
+      name: user.rows[0].username,
+    });
+    return;
+  } catch (err) {
+    const error = err as Error;
+    console.log(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 /**
  * POST Authenticate User and Get Token

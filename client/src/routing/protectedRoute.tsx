@@ -1,14 +1,15 @@
-import { AuthUser } from '../types/auth';
+import { ReactNode, use } from 'react';
+import { AuthContext } from '../context';
 import { Navigate } from 'react-router';
-import { ReactNode } from 'react';
 
 type ProtectedRouteProps = {
-  user: AuthUser | null;
   children: ReactNode;
 };
 
-export const ProtectedRoute = ({ user, children }: ProtectedRouteProps) => {
-  if (!user) {
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const auth = use(AuthContext);
+
+  if (!auth?.authUser) {
     return <Navigate to="/" replace />;
   }
 

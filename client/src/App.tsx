@@ -1,16 +1,15 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Route, Routes } from 'react-router';
+import { NavLink, Route, Routes } from 'react-router';
+import { useEffect, useState } from 'react';
 
 import { AuthContext } from './context';
 import { type AuthUser } from './types/auth';
 import { Login } from './pages';
 import { ProtectedRoute } from './routing';
+import { Spinner } from './components/spinner/spinner';
 import Table from './table.component';
 
+import { useAuth } from './api/auth';
 import { useQuestions } from './api/services/question';
-import { useState } from 'react';
-
-const queryClient = new QueryClient();
 
 const Page = () => {
   const { isLoading, data } = useQuestions();
@@ -27,26 +26,45 @@ const Page = () => {
 };
 
 function App() {
+  const { data, isLoading } = useAuth();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
+  useEffect(() => {
+    if (data) {
+      setAuthUser(data);
+    }
+  }, [data]);
+
+  if (isLoading || !authUser) {
+    return <Spinner />;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={{ authUser, setAuthUser }}>
-        <Routes>
-          <Route index element={<div>Home</div>} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/page"
-            element={
-              <ProtectedRoute user={authUser}>
-                <Page />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<div>404 Page Not Found</div>} />
-        </Routes>
-      </AuthContext.Provider>
-    </QueryClientProvider>
+    <AuthContext.Provider value={{ authUser, setAuthUser }}>
+      <Routes>
+        <Route
+          index
+          element={
+            <div>
+              {authUser?.id}
+              <div>
+                <NavLink to="/page">Page</NavLink>
+              </div>
+            </div>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/page"
+          element={
+            <ProtectedRoute>
+              <Page />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<div>404 Page Not Found</div>} />
+      </Routes>
+    </AuthContext.Provider>
   );
 }
 
