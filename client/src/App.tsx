@@ -1,29 +1,13 @@
+import { AdminPage, LoginPage } from './pages';
 import { NavLink, Outlet, Route, Routes } from 'react-router';
 import { AuthContext } from './context';
 
 import { type AuthUser } from './types/auth';
-import { Login } from './pages';
 import { Navbar } from './containers';
 import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
-import Table from './table.component';
 
-import { useQuestions } from './api/services/question';
 import { useState } from 'react';
-
-const Page = () => {
-  const { isLoading, data } = useQuestions();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!data) {
-    return <div>No data</div>;
-  }
-
-  return <Table data={data} />;
-};
 
 function App() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
@@ -42,7 +26,7 @@ function App() {
             </div>
           }
         />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
           path={PATHS.ADMIN_PAGE}
           element={
@@ -56,7 +40,7 @@ function App() {
             index
             element={
               <ProtectedRoute>
-                <Page />
+                <AdminPage />
               </ProtectedRoute>
             }
           />

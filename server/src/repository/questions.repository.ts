@@ -26,7 +26,9 @@ type QuestionWithChoicesResponse = {
   choices: ChoicesModel[];
 } & QuestionModel;
 
-export const findAllWithChoices = (): Promise<
+export const findAllWithChoices = ({
+  isAdmin,
+}: { isAdmin?: boolean } = {}): Promise<
   QueryResult<QuestionWithChoicesResponse>
 > => {
   return pool.query(`SELECT 
@@ -38,6 +40,7 @@ export const findAllWithChoices = (): Promise<
         json_build_object(
           'choice_id', qc.choice_id, 
           'choice_text', qc.choice_text
+          ${isAdmin ? ", 'is_right_answer', qc.is_right_answer" : ''}
         )
       )
     END AS choices 

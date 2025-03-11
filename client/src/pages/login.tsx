@@ -1,5 +1,5 @@
 import { Login as LoginContainer } from '../containers';
 
-export const Login = () => {
+export const LoginPage = () => {
   return <LoginContainer />;
 };

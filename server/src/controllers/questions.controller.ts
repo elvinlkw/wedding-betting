@@ -1,15 +1,33 @@
-import { Request, Response } from "express";
-import camelcaseKeys from "camelcase-keys";
-import pool from "../db";
-import { questionsRepository } from "../repository";
+import { Request, Response } from 'express';
+import camelcaseKeys from 'camelcase-keys';
+import pool from '../db';
+import { questionsRepository } from '../repository';
 
 export const getAllQuestions = async (req: Request, res: Response) => {
   try {
-    const includeChoices = req.query.includeChoices === "true";
+    const includeChoices = req.query.includeChoices === 'true';
 
     const allQuestions = includeChoices
       ? await questionsRepository.findAllWithChoices()
       : await questionsRepository.findAll();
+    const response = {
+      count: allQuestions.rowCount,
+      data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
+    };
+    res.json(response);
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllAdminQuestions = async (req: Request, res: Response) => {
+  try {
+    const allQuestions = await questionsRepository.findAllWithChoices({
+      isAdmin: true,
+    });
+
     const response = {
       count: allQuestions.rowCount,
       data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
@@ -38,7 +56,7 @@ export const getChoicesByQuestionId = async (req: Request, res: Response) => {
     const questionId = req.params.id;
     const question = await questionsRepository.findById(questionId);
     if (!question.rowCount) {
-      console.error("Invalid question id");
+      console.error('Invalid question id');
       res.status(404).json({
         message: `Invalid question id`,
       });
@@ -73,7 +91,7 @@ export const createChoice = async (req: Request, res: Response) => {
 
     const question = await questionsRepository.findById(questionId);
     if (!question.rowCount) {
-      console.error("Invalid question id");
+      console.error('Invalid question id');
       res.status(404).json({
         message: `Invalid question id`,
       });

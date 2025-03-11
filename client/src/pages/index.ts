@@ -1,1 +1,2 @@
-export { Login } from './login';
+export { LoginPage } from './login';
+export { AdminPage } from './admin';

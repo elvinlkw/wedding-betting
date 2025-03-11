@@ -9,6 +9,11 @@ const router = express.Router();
 router.get('/', questionsController.getAllQuestions);
 
 /**
+ * Get all admin questions
+ */
+router.get('/admin', auth, questionsController.getAllAdminQuestions);
+
+/**
  * Create a question
  */
 router.post('/', auth, questionsController.create);
