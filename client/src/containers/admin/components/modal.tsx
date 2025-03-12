@@ -17,22 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '1px solid #000',
-  borderRadius: '12px',
-  boxShadow: 24,
-  p: 4,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-};
-
 const schema = object({
   questionText: string().required('Question text is required'),
   choices: array()
@@ -70,7 +54,7 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
   const handleCheckboxChange = (index: number) => {
     const updatedChoices = choices.map((choice, i) => ({
       ...choice,
-      isRightAnswer: i === index,
+      isRightAnswer: i === index && !choice.isRightAnswer,
     }));
     setValue('choices', updatedChoices);
   };
@@ -193,7 +177,32 @@ export const Modal = ({ open, setOpen }: ModalProps) => {
   return (
     <MuiModal open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(submit)}>
-        <Box sx={style}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            border: '1px solid #000',
+            borderRadius: '12px',
+            boxShadow: 24,
+            width: {
+              xs: '100%', // 100% width for mobile devices
+              md: '400px', // 400px width for larger devices
+            },
+            boxSizing: {
+              xs: 'border-box',
+            },
+            p: {
+              xs: 2,
+              md: 4,
+            },
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
           <Typography component="h2">Add Question</Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
