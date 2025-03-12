@@ -43,7 +43,7 @@ export const getAllAdminQuestions = async (req: Request, res: Response) => {
 export const create = async (req: Request, res: Response) => {
   try {
     const newQuestion = await questionsRepository.insert(req.body);
-    res.json(newQuestion.rows[0]);
+    res.json(camelcaseKeys(newQuestion.rows[0], { deep: true }));
   } catch (err) {
     const error = err as Error;
     console.error(error.message);
@@ -98,16 +98,34 @@ export const createChoice = async (req: Request, res: Response) => {
       return;
     }
 
-    const { isRightAnswer = false, text } = req.body;
-    const newQuestion = await pool.query(
-      `INSERT INTO question_choices (
-      question_id, is_right_answer, choice_text
-    ) VALUES (
-      $1, $2, $3
-    ) RETURNING *`,
-      [questionId, isRightAnswer, text]
+    const choices = req.body;
+
+    const promises = choices.map(
+      (choice: {
+        choiceId?: number;
+        choiceText: string;
+        isRightAnswer: boolean;
+      }) => {
+        // TODO: skip if it is edit
+
+        return pool.query(
+          `INSERT INTO question_choices (
+          question_id, is_right_answer, choice_text
+        ) VALUES (
+          $1, $2, $3
+        ) RETURNING choice_id, choice_text, is_right_answer`,
+          [questionId, choice.isRightAnswer, choice.choiceText]
+        );
+      }
     );
-    res.json(newQuestion.rows[0]);
+
+    const responses = await Promise.all(promises);
+
+    const formattedResponses = responses.map((res) => {
+      return res.rows[0];
+    });
+
+    res.json(camelcaseKeys(formattedResponses, { deep: true }));
   } catch (err) {
     const error = err as Error;
     console.error(error.message);

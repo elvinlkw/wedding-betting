@@ -30,7 +30,7 @@ export const Accordion = ({ data }: { data: Question[] }) => {
   return (
     <div>
       {data.map((question) => (
-        <MuiAccordion defaultExpanded>
+        <MuiAccordion defaultExpanded key={`question-${question.questionId}`}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography component="span">{question.questionText}</Typography>
           </AccordionSummary>
