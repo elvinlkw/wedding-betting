@@ -17,6 +17,7 @@ export type Question = {
   questionId: number;
   questionText: string;
   choices: Choice[];
+  isAnswerRevealed: boolean;
 };
 
 const getQuestionsForAdmins = async (): Promise<Question[]> => {
@@ -36,9 +37,7 @@ export const useQuestions = (): UseQueryResult<Question[]> => {
   });
 };
 
-const createQuestion = async (
-  text: string
-): Promise<Pick<Question, 'questionId' | 'questionText'>> => {
+const createQuestion = async (text: string): Promise<Question> => {
   const config = {
     headers: {
       'x-auth-token': Cookies.get('jwttoken'),
@@ -117,7 +116,7 @@ export const useCreateQuestion = () => {
 const updateQuestion = async (
   questionId: number,
   text: string
-): Promise<Pick<Question, 'questionId' | 'questionText'>> => {
+): Promise<Question> => {
   const config = {
     headers: {
       'x-auth-token': Cookies.get('jwttoken'),
@@ -197,6 +196,62 @@ export const useDeleteQuestion = () => {
       queryClient.setQueryData<Question[]>(['admin-questions'], (oldData) => {
         return oldData?.filter((question) => {
           return question.questionId !== variables;
+        });
+      });
+    },
+  });
+};
+
+const patchQuestion = async (
+  questionId: number,
+  { questionText, isAnswerRevealed }: Partial<Question>
+): Promise<Question> => {
+  const config = {
+    headers: {
+      'x-auth-token': Cookies.get('jwttoken'),
+    },
+  };
+
+  const body: Partial<Question> = {};
+  if (isAnswerRevealed !== undefined) {
+    body.isAnswerRevealed = isAnswerRevealed;
+  }
+
+  if (questionText) {
+    body.questionText = questionText;
+  }
+
+  const response = await axios.patch(
+    `/api/questions/${questionId}`,
+    body,
+    config
+  );
+  return response.data;
+};
+
+export const usePatchQuestion = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      questionId,
+      ...rest
+    }: {
+      questionId: number;
+      questionText?: string;
+      isAnswerRevealed?: boolean;
+    }) => patchQuestion(questionId, rest),
+    onSuccess: (data) => {
+      queryClient.setQueryData<Question[]>(['admin-questions'], (oldData) => {
+        return oldData?.map((question) => {
+          if (question.questionId === data.questionId) {
+            return {
+              ...data,
+              choices: question.choices,
+            };
+          }
+
+          return question;
         });
       });
     },

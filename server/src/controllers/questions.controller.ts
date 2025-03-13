@@ -76,6 +76,63 @@ export const update = async (req: Request, res: Response) => {
   }
 };
 
+export const patch = async (req: Request, res: Response) => {
+  try {
+    const questionId = req.params.questionId;
+
+    const question = await questionsRepository.findById(questionId);
+    if (!question.rowCount) {
+      console.error('Invalid question id');
+      res.status(404).json({
+        message: `Invalid question id`,
+      });
+      return;
+    }
+
+    const { questionText, isEnabled, isAnswerRevealed } = req.body;
+
+    const fieldsToUpdate = [];
+    const values = [];
+    let query = 'UPDATE questions SET ';
+
+    if (questionText !== undefined) {
+      fieldsToUpdate.push('question_text = $' + (fieldsToUpdate.length + 1));
+      values.push(questionText);
+    }
+
+    if (isEnabled !== undefined) {
+      fieldsToUpdate.push('is_enabled = $' + (fieldsToUpdate.length + 1));
+      values.push(isEnabled);
+    }
+
+    if (isAnswerRevealed !== undefined) {
+      fieldsToUpdate.push(
+        'is_answer_revealed = $' + (fieldsToUpdate.length + 1)
+      );
+      values.push(isAnswerRevealed);
+    }
+
+    if (fieldsToUpdate.length === 0) {
+      res.status(400).json({ message: 'No fields to update' });
+      return;
+    }
+
+    query +=
+      fieldsToUpdate.join(', ') +
+      ' WHERE question_id = $' +
+      (fieldsToUpdate.length + 1) +
+      ' RETURNING *';
+    values.push(questionId);
+
+    const updatedQuestion = await pool.query(query, values);
+    res.json(camelcaseKeys(updatedQuestion.rows[0], { deep: true }));
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const remove = async (req: Request, res: Response) => {
   try {
     const questionId = req.params.questionId;

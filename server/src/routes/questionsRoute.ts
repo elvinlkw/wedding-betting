@@ -24,6 +24,11 @@ router.post('/', auth, questionsController.create);
 router.put('/:questionId', questionsController.update);
 
 /**
+ * Patch a question
+ */
+router.patch('/:questionId', questionsController.patch);
+
+/**
  * Delete a question
  */
 router.delete('/:questionId', questionsController.remove);

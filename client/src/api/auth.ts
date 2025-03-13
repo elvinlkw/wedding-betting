@@ -39,5 +39,6 @@ export const useAuth = () => {
     queryKey: ['auth'],
     queryFn: getUser,
     enabled: !!Cookies.get('jwttoken'),
+    retry: 0,
   });
 };

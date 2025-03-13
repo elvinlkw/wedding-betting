@@ -66,7 +66,7 @@ export const Login = () => {
   const { mutate } = useAuthLogin();
 
   useEffect(() => {
-    if (Cookies.get('jwttoken')) {
+    if (Cookies.get('jwttoken') && auth?.authUser) {
       navigate(PATHS.ADMIN_PAGE);
     }
   }, [auth?.authUser, navigate]);

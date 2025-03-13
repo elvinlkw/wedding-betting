@@ -11,7 +11,7 @@ type ProtectedRouteProps = {
 };
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { data, isLoading } = useAuth();
+  const { data, isLoading, isError } = useAuth();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const authContext = use(AuthContext);
 
@@ -22,7 +22,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
   }, [data, authContext]);
 
-  if (!Cookies.get('jwttoken')) {
+  if (!Cookies.get('jwttoken') || isError) {
     return <Navigate to="/login" replace />;
   }
 

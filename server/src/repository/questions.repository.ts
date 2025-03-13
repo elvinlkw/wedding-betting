@@ -34,6 +34,7 @@ export const findAllWithChoices = ({
   return pool.query(`SELECT 
     q.question_id,
     q.question_text,
+    q.is_answer_revealed,
     CASE 
       WHEN COUNT(qc.choice_id) = 0 THEN '[]'::json
       ELSE json_agg(
