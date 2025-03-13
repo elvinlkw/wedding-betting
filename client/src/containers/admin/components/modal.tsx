@@ -1,6 +1,11 @@
 import { Add, Delete } from '@mui/icons-material';
 import { Button, Checkbox, Input, Stack, TextField } from '@mui/material';
-import { Choice, useCreateQuestion } from '../../../api/services/question';
+import {
+  Choice,
+  Question,
+  useCreateQuestion,
+  useUpdateQuestion,
+} from '../../../api/services/question';
 import {
   Control,
   Controller,
@@ -135,39 +140,51 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
 
 type ModalProps = {
   open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
+  question: Question | null;
 };
 
-export const Modal = ({ open, setOpen }: ModalProps) => {
+const defaultQuestion = {
+  questionText: '',
+  choices: [
+    {
+      choiceText: '',
+      isRightAnswer: false,
+    },
+  ],
+};
+
+export const Modal = ({ open, onClose, question }: ModalProps) => {
   const { control, reset, handleSubmit, setValue } = useForm<FormValues>({
     mode: 'onBlur',
-    defaultValues: {
-      questionText: '',
-      choices: [
-        {
-          choiceText: '',
-          isRightAnswer: false,
-        },
-      ],
-    },
+    values: question ?? defaultQuestion,
     resolver: yupResolver(schema),
   });
 
   const { mutateAsync: createQuestion } = useCreateQuestion();
+  const { mutateAsync: updateQuestion } = useUpdateQuestion();
 
   const handleClose = () => {
     reset();
-    setOpen(false);
+    onClose();
   };
 
   const submit = async (data: FormValues) => {
     const { choices, questionText } = data;
     try {
-      const response = await createQuestion({
-        questionText,
-        choices,
-      });
-      console.log(response);
+      if (question) {
+        await updateQuestion({
+          questionId: question.questionId,
+          questionText,
+          choices,
+        });
+      } else {
+        await createQuestion({
+          questionText,
+          choices,
+        });
+      }
+
       handleClose();
     } catch (error) {
       console.error(error);
@@ -203,7 +220,9 @@ export const Modal = ({ open, setOpen }: ModalProps) => {
             gap: '16px',
           }}
         >
-          <Typography component="h2">Add Question</Typography>
+          <Typography component="h2">
+            {question ? 'Edit' : 'Add'} Question
+          </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <Controller

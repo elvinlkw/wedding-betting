@@ -113,3 +113,67 @@ export const useCreateQuestion = () => {
     },
   });
 };
+
+const updateQuestion = async (
+  questionId: number,
+  text: string
+): Promise<Pick<Question, 'questionId' | 'questionText'>> => {
+  const config = {
+    headers: {
+      'x-auth-token': Cookies.get('jwttoken'),
+    },
+  };
+  const response = await axios.put(
+    `/api/questions/${questionId}`,
+    {
+      text,
+      isActive: true,
+    },
+    config
+  );
+  return response.data;
+};
+
+export const useUpdateQuestion = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      questionId,
+      questionText,
+      choices,
+    }: {
+      questionId: number;
+      questionText: string;
+      choices: Omit<Choice, 'choiceId'>[];
+    }) => {
+      const question = await updateQuestion(questionId, questionText);
+      if (!choices.length) {
+        return {
+          ...question,
+          choices: [],
+        };
+      }
+
+      const newChoices = await createQuestionChoice(
+        question.questionId,
+        choices
+      );
+      return {
+        ...question,
+        choices: newChoices,
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData<Question[]>(['admin-questions'], (oldData) => {
+        return oldData?.map((question) => {
+          if (question.questionId === data.questionId) {
+            return data;
+          }
+
+          return question;
+        });
+      });
+    },
+  });
+};

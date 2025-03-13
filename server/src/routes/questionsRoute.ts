@@ -19,12 +19,17 @@ router.get('/admin', auth, questionsController.getAllAdminQuestions);
 router.post('/', auth, questionsController.create);
 
 /**
+ * Update a question
+ */
+router.put('/:questionId', questionsController.update);
+
+/**
  * Get all choices for a question
  */
 router.get('/:id/choices', questionsController.getChoicesByQuestionId);
 
 /**
- * Create a choice for a question
+ * Create choices for a question
  */
 router.post('/:id/choices', auth, questionsController.createChoice);
 

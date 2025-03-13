@@ -12,7 +12,25 @@ type AdminContainerProps = {
 
 export const AdminContainer = ({ data }: AdminContainerProps) => {
   const [open, setOpen] = useState(false);
+  const [focusedQuestion, setFocusedQuestion] = useState<Question | null>(null);
   const handleOpen = () => setOpen(true);
+
+  const handleEditClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    _question: Question
+  ) => {
+    console.log(_question);
+    event.preventDefault();
+    setFocusedQuestion(_question);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    if (focusedQuestion) {
+      setFocusedQuestion(null);
+    }
+  };
 
   return (
     <>
@@ -21,9 +39,9 @@ export const AdminContainer = ({ data }: AdminContainerProps) => {
           List of Questions
         </Typography>
         <ActionBar onAddQuestionClick={handleOpen} />
-        <Accordion data={data} />
+        <Accordion data={data} onEditClick={handleEditClick} />
       </Container>
-      <Modal open={open} setOpen={setOpen} />
+      <Modal open={open} question={focusedQuestion} onClose={handleClose} />
     </>
   );
 };

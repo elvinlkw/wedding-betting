@@ -51,6 +51,31 @@ export const create = async (req: Request, res: Response) => {
   }
 };
 
+export const update = async (req: Request, res: Response) => {
+  try {
+    const questionId = req.params.questionId;
+
+    const question = await questionsRepository.findById(questionId);
+    if (!question.rowCount) {
+      console.error('Invalid question id');
+      res.status(404).json({
+        message: `Invalid question id`,
+      });
+      return;
+    }
+
+    const updatedQuestion = await questionsRepository.update(
+      questionId,
+      req.body
+    );
+    res.json(camelcaseKeys(updatedQuestion.rows[0], { deep: true }));
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getChoicesByQuestionId = async (req: Request, res: Response) => {
   try {
     const questionId = req.params.id;
@@ -98,6 +123,17 @@ export const createChoice = async (req: Request, res: Response) => {
       return;
     }
 
+    // TODO: improve this
+    const allChoices = await pool.query(
+      `SELECT * FROM question_choices WHERE question_id = $1`,
+      [questionId]
+    );
+    if (allChoices.rowCount) {
+      await pool.query(`DELETE FROM question_choices WHERE question_id = $1`, [
+        questionId,
+      ]);
+    }
+
     const choices = req.body;
 
     const promises = choices.map(
@@ -106,8 +142,6 @@ export const createChoice = async (req: Request, res: Response) => {
         choiceText: string;
         isRightAnswer: boolean;
       }) => {
-        // TODO: skip if it is edit
-
         return pool.query(
           `INSERT INTO question_choices (
           question_id, is_right_answer, choice_text

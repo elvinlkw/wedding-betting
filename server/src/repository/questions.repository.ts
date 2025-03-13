@@ -65,3 +65,17 @@ export const insert = ({ text, isActive = true }: QuestionBody) => {
     [text, isActive]
   );
 };
+
+export const update = (
+  questionId: string,
+  { text, isActive = true }: QuestionBody
+) => {
+  return pool.query(
+    `UPDATE questions
+    SET question_text = $1,
+        is_enabled = $2
+    WHERE question_id = $3
+    RETURNING *`,
+    [text, isActive, questionId]
+  );
+};
