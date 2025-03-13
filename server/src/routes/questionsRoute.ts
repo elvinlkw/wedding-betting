@@ -24,6 +24,11 @@ router.post('/', auth, questionsController.create);
 router.put('/:questionId', questionsController.update);
 
 /**
+ * Delete a question
+ */
+router.delete('/:questionId', questionsController.remove);
+
+/**
  * Get all choices for a question
  */
 router.get('/:id/choices', questionsController.getChoicesByQuestionId);

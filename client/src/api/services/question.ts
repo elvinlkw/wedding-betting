@@ -177,3 +177,28 @@ export const useUpdateQuestion = () => {
     },
   });
 };
+
+const deleteQuestion = async (questionId: number): Promise<void> => {
+  const config = {
+    headers: {
+      'x-auth-token': Cookies.get('jwttoken'),
+    },
+  };
+  const response = await axios.delete(`/api/questions/${questionId}`, config);
+  return response.data;
+};
+
+export const useDeleteQuestion = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteQuestion,
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData<Question[]>(['admin-questions'], (oldData) => {
+        return oldData?.filter((question) => {
+          return question.questionId !== variables;
+        });
+      });
+    },
+  });
+};

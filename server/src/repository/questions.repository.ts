@@ -79,3 +79,11 @@ export const update = (
     [text, isActive, questionId]
   );
 };
+
+export const remove = (questionId: string) => {
+  return pool.query(
+    `DELETE FROM questions
+    WHERE question_id = $1`,
+    [questionId]
+  );
+};

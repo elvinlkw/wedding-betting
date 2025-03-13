@@ -76,6 +76,28 @@ export const update = async (req: Request, res: Response) => {
   }
 };
 
+export const remove = async (req: Request, res: Response) => {
+  try {
+    const questionId = req.params.questionId;
+
+    const question = await questionsRepository.findById(questionId);
+    if (!question.rowCount) {
+      console.error('Invalid question id');
+      res.status(404).json({
+        message: `Invalid question id`,
+      });
+      return;
+    }
+
+    await questionsRepository.remove(questionId);
+    res.json({ message: 'Successfully removed question' });
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getChoicesByQuestionId = async (req: Request, res: Response) => {
   try {
     const questionId = req.params.id;
