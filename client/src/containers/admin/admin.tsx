@@ -19,7 +19,6 @@ export const AdminContainer = ({ data }: AdminContainerProps) => {
     event: React.MouseEvent<HTMLButtonElement>,
     _question: Question
   ) => {
-    console.log(_question);
     event.preventDefault();
     setFocusedQuestion(_question);
     setOpen(true);

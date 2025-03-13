@@ -1,3 +1,4 @@
+import { Question, useDeleteQuestion } from '../../../api/services/question';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
@@ -13,36 +14,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import MuiAccordion from '@mui/material/Accordion';
-import { Question, useDeleteQuestion } from '../../../api/services/question';
 import Stack from '@mui/material/Stack';
 import { Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import styled from '@emotion/styled';
 import { useState } from 'react';
-
-const CustomChip = styled(Chip)({
-  position: 'relative',
-
-  '& .MuiSvgIcon-root': {
-    opacity: 1,
-    position: 'absolute',
-    right: -10,
-    top: -10,
-    background: 'inherit',
-    borderRadius: '50%',
-    transition: 'opacity 0.3s ease',
-  },
-
-  '&:hover .MuiSvgIcon-root': {
-    opacity: 1,
-  },
-
-  '@media (min-width: 600px)': {
-    '& .MuiSvgIcon-root': {
-      opacity: 0,
-    },
-  },
-});
 
 export const Accordion = ({
   data,
@@ -105,11 +80,10 @@ export const Accordion = ({
               >
                 <Stack direction="row" gap={1} flexWrap="wrap">
                   {question.choices.map((choice) => (
-                    <CustomChip
+                    <Chip
                       key={choice.choiceId}
                       label={choice.choiceText}
                       color={choice.isRightAnswer ? 'success' : 'error'}
-                      onDelete={() => {}} // TODO: Add Delete Logic
                     />
                   ))}
                 </Stack>
