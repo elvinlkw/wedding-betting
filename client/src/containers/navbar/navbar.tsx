@@ -27,6 +27,10 @@ const pages = [
     name: 'Admin',
     url: PATHS.ADMIN_PAGE,
   },
+  {
+    name: 'User Answers',
+    url: PATHS.USER_ANSWERS_PAGE,
+  },
 ];
 
 const LogoLink = styled(Link)({
@@ -145,7 +149,7 @@ export const Navbar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
-              <NavLink to={page.url} key={idx}>
+              <NavLink to={page.url} key={idx} end>
                 {({ isActive }) => (
                   <Button
                     onClick={handleCloseNavMenu}

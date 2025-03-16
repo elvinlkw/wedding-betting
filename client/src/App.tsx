@@ -1,4 +1,4 @@
-import { AdminPage, LoginPage } from './pages';
+import { AdminPage, LoginPage, UserAnswers } from './pages';
 import { NavLink, Outlet, Route, Routes } from 'react-router';
 import { AuthContext } from './context';
 
@@ -26,6 +26,7 @@ function App() {
           }
         />
         <Route path="/login" element={<LoginPage />} />
+        {/* ADMIN ROUTES */}
         <Route
           path={PATHS.ADMIN_PAGE}
           element={
@@ -40,6 +41,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="user-answers"
+            element={
+              <ProtectedRoute>
+                <UserAnswers />
               </ProtectedRoute>
             }
           />
