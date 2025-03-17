@@ -32,7 +32,7 @@ const router = express.Router();
 //     // JWT
 //     const payload = {
 //       user: {
-//         id: newUser.rows[0].admin_user_id,
+//         id: newUser.rows[0].admin_id,
 //       },
 //     };
 

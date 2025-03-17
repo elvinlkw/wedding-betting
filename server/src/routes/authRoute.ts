@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', auth, async (req: Request, res: Response) => {
   try {
     const user = await pool.query(
-      `SELECT admin_user_id, username FROM admin_user WHERE admin_user_id = $1`,
+      `SELECT admin_id, username FROM admin_user WHERE admin_id = $1`,
       [req.user?.id]
     );
     res.json({
@@ -68,7 +68,7 @@ router.post(
       // JWT
       const payload = {
         user: {
-          id: userData.admin_user_id,
+          id: userData.admin_id,
         },
       };
 
