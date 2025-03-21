@@ -1,12 +1,6 @@
 import { Add, Delete } from '@mui/icons-material';
 import { Button, Checkbox, Input, Stack, TextField } from '@mui/material';
 import {
-  Choice,
-  Question,
-  useCreateQuestion,
-  useUpdateQuestion,
-} from '../../../api/services/question';
-import {
   Control,
   Controller,
   UseFormSetValue,
@@ -14,6 +8,11 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form';
+import {
+  Question,
+  useCreateQuestion,
+  useUpdateQuestion,
+} from '../../../api/services/question';
 import { array, boolean, object, string } from 'yup';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -35,9 +34,15 @@ const schema = object({
     .default([]),
 });
 
+type FormValuesChoices = {
+  choiceId?: number;
+  choiceText: string;
+  isRightAnswer: boolean;
+};
+
 type FormValues = {
   questionText: string;
-  choices: Omit<Choice, 'choiceId'>[];
+  choices: FormValuesChoices[];
 };
 
 type ChoicesArrayField = {

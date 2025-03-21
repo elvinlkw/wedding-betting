@@ -133,6 +133,23 @@ const updateQuestion = async (
   return response.data;
 };
 
+const updateQuestionChoice = async (
+  questionId: number,
+  choices: Omit<Choice, 'choiceId'>[]
+): Promise<Choice[]> => {
+  const config = {
+    headers: {
+      'x-auth-token': Cookies.get('jwttoken'),
+    },
+  };
+  const response = await axios.put(
+    `/api/questions/${questionId}/choices`,
+    choices,
+    config
+  );
+  return response.data;
+};
+
 export const useUpdateQuestion = () => {
   const queryClient = useQueryClient();
 
@@ -144,7 +161,11 @@ export const useUpdateQuestion = () => {
     }: {
       questionId: number;
       questionText: string;
-      choices: Omit<Choice, 'choiceId'>[];
+      choices: {
+        choiceId?: Choice['choiceId'];
+        choiceText: Choice['choiceText'];
+        isRightAnswer: Choice['isRightAnswer'];
+      }[];
     }) => {
       const question = await updateQuestion(questionId, questionText);
       if (!choices.length) {
@@ -154,7 +175,7 @@ export const useUpdateQuestion = () => {
         };
       }
 
-      const newChoices = await createQuestionChoice(
+      const newChoices = await updateQuestionChoice(
         question.questionId,
         choices
       );
