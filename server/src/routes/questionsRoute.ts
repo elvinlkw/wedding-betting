@@ -43,4 +43,9 @@ router.get('/:id/choices', questionsController.getChoicesByQuestionId);
  */
 router.post('/:id/choices', auth, questionsController.createChoice);
 
+/**
+ * Update choices for a question
+ */
+router.put('/:id/choices', auth, questionsController.updateBatchChoices);
+
 export default router;

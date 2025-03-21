@@ -14,7 +14,7 @@ export type ChoicesModel = {
   choice_text: string;
 };
 
-export const findAll = (): Promise<QueryResult<QuestionModel>> => {
+export const findAll = (): Promise<QueryResult<QuestionModel[]>> => {
   return pool.query(`SELECT * FROM questions WHERE is_enabled = TRUE;`);
 };
 

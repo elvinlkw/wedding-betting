@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import camelcaseKeys from 'camelcase-keys';
 import pool from '../db';
-import { questionsRepository } from '../repository';
+import { choicesRepository, questionsRepository } from '../repository';
+import { ErrorType } from '../types';
 
 export const getAllQuestions = async (req: Request, res: Response) => {
   try {
@@ -167,10 +168,7 @@ export const getChoicesByQuestionId = async (req: Request, res: Response) => {
       return;
     }
 
-    const allChoices = await pool.query(
-      `SELECT * FROM question_choices WHERE question_id = $1`,
-      [questionId]
-    );
+    const allChoices = await choicesRepository.findById(questionId);
 
     const response = {
       count: allChoices.rowCount,
@@ -203,14 +201,9 @@ export const createChoice = async (req: Request, res: Response) => {
     }
 
     // TODO: improve this
-    const allChoices = await pool.query(
-      `SELECT * FROM question_choices WHERE question_id = $1`,
-      [questionId]
-    );
+    const allChoices = await choicesRepository.findById(questionId);
     if (allChoices.rowCount) {
-      await pool.query(`DELETE FROM question_choices WHERE question_id = $1`, [
-        questionId,
-      ]);
+      await choicesRepository.removeAll(questionId);
     }
 
     const choices = req.body;
@@ -221,14 +214,7 @@ export const createChoice = async (req: Request, res: Response) => {
         choiceText: string;
         isRightAnswer: boolean;
       }) => {
-        return pool.query(
-          `INSERT INTO question_choices (
-          question_id, is_right_answer, choice_text
-        ) VALUES (
-          $1, $2, $3
-        ) RETURNING choice_id, choice_text, is_right_answer`,
-          [questionId, choice.isRightAnswer, choice.choiceText]
-        );
+        return choicesRepository.insert(questionId, choice);
       }
     );
 
@@ -239,6 +225,94 @@ export const createChoice = async (req: Request, res: Response) => {
     });
 
     res.json(camelcaseKeys(formattedResponses, { deep: true }));
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+type ChoiceUpdateParams = {
+  id: string;
+};
+
+type ChoiceUpdateBody = {
+  choiceId?: number;
+  choiceText: string;
+  isRightAnswer: boolean;
+};
+
+type ChoiceUpdateResponse = {
+  choiceId: number;
+  choiceText: string;
+  isRightAnswer: boolean;
+};
+
+export const updateBatchChoices = async (
+  req: Request<ChoiceUpdateParams, null, ChoiceUpdateBody[]>,
+  res: Response<ChoiceUpdateResponse[] | ErrorType>
+) => {
+  try {
+    // Check for questions exist
+    const questionId = req.params.id;
+    const question = await questionsRepository.findById(questionId);
+    if (!question.rowCount) {
+      console.error('Invalid question id');
+      res.status(404).json({
+        message: `Invalid question id`,
+      });
+      return;
+    }
+
+    const storedChoices = await choicesRepository.findById(questionId);
+    let temp = structuredClone(storedChoices.rows);
+
+    const choicesToUpdate = req.body;
+
+    const createPromises: Array<ReturnType<typeof choicesRepository.insert>> =
+      [];
+    const updatePromises: Array<ReturnType<typeof choicesRepository.update>> =
+      [];
+
+    choicesToUpdate.forEach((choice) => {
+      if (choice?.choiceId) {
+        // Update choice entry
+        const storedChoice = temp.find(
+          (ch) => ch.choice_id === choice.choiceId
+        );
+        if (!storedChoice) {
+          res
+            .status(404)
+            .json({ message: `Choice with id ${choice.choiceId} not found` });
+          return;
+        }
+        updatePromises.push(
+          choicesRepository.update(questionId, choice.choiceId, choice)
+        );
+        // Remove the choice from the storedChoices temp
+        temp = temp.filter((ch) => ch.choice_id !== choice.choiceId);
+      } else {
+        // Create new choice entry
+        createPromises.push(choicesRepository.insert(questionId, choice));
+      }
+    });
+
+    const deletePromise = temp.map((choice) => {
+      return choicesRepository.removeOne(choice.choice_id);
+    });
+
+    // Execute all promises
+    await Promise.all(deletePromise);
+    const updateResponse = await Promise.all(updatePromises);
+    const createResponse = await Promise.all(createPromises);
+
+    // Combine and format the responses
+    const response = [
+      ...updateResponse.map((res) => res.rows.map((row) => camelcaseKeys(row))),
+      ...createResponse.map((res) => res.rows.map((row) => camelcaseKeys(row))),
+    ].flat();
+
+    res.json(response);
   } catch (err) {
     const error = err as Error;
     console.error(error.message);
