@@ -27,10 +27,10 @@ const schema = object({
     .of(
       object({
         choiceText: string().required('Choice text is required'),
-        isRightAnswer: boolean().default(false).required(),
+        isRightAnswer: boolean().default(false),
       })
     )
-    .required('Choices are required')
+    .optional()
     .default([]),
 });
 
@@ -151,12 +151,7 @@ type ModalProps = {
 
 const defaultQuestion = {
   questionText: '',
-  choices: [
-    {
-      choiceText: '',
-      isRightAnswer: false,
-    },
-  ],
+  choices: [],
 };
 
 export const Modal = ({ open, onClose, question }: ModalProps) => {
