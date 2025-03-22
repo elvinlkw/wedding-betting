@@ -123,11 +123,9 @@ export const Navbar = () => {
             >
               {pages.map((page, idx) => (
                 <MenuItem key={idx} onClick={handleCloseNavMenu}>
-                  <Link to={page.url}>
-                    <Typography sx={{ textAlign: 'center' }}>
-                      {page.name}
-                    </Typography>
-                  </Link>
+                  <Typography sx={{ textAlign: 'center' }}>
+                    <Link to={page.url}>{page.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -149,25 +147,31 @@ export const Navbar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
-              <NavLink to={page.url} key={idx} end>
-                {({ isActive }) => (
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{
-                      my: 2,
-                      color: 'white',
-                      display: 'block',
-                      textDecoration: isActive ? 'underline' : 'none',
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                }}
+              >
+                <NavLink to={page.url} key={idx} end>
+                  {({ isActive }) => (
+                    <Typography
+                      sx={{
+                        fontSize: '14px',
+                        fontWeight: isActive ? 700 : 400,
 
-                      ':hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    {page.name}
-                  </Button>
-                )}
-              </NavLink>
+                        '&:hover': {
+                          fontWeight: isActive ? 700 : 500,
+                        },
+                      }}
+                    >
+                      {page.name}
+                    </Typography>
+                  )}
+                </NavLink>
+              </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
