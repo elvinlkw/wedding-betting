@@ -7,6 +7,7 @@ import {
   adminUserRoute,
   authRoute,
   scoreboardRoute,
+  featuresRoute,
 } from './src/routes/index.js';
 
 declare module 'express' {
@@ -30,6 +31,7 @@ app.use('/api/user-answers', userAnswersRoute);
 app.use('/api/admin-user', adminUserRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/scoreboard', scoreboardRoute);
+app.use('/api/features', featuresRoute);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

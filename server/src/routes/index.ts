@@ -3,6 +3,7 @@ import userAnswersRoute from './userAnswersRoute';
 import adminUserRoute from './adminUsersRoute';
 import authRoute from './authRoute';
 import scoreboardRoute from './scoreboard.route';
+import featuresRoute from './features.route';
 
 export {
   questionsRoute,
@@ -10,4 +11,5 @@ export {
   adminUserRoute,
   authRoute,
   scoreboardRoute,
+  featuresRoute,
 };
