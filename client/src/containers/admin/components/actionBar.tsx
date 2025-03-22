@@ -1,16 +1,15 @@
 import { Add } from '@mui/icons-material';
 import Button from '@mui/material/Button';
+import { FEATURE_CREATE_QUESTION } from '../../../features';
 import Stack from '@mui/material/Stack';
-import { useFeatureStore } from '../../../store/featureStore';
+import { useFeatureFlag } from '../../../hooks/useFeatureFlag.hooks';
 
 type ActionBarProps = {
   onAddQuestionClick?: () => void;
 };
 
 export const ActionBar = ({ onAddQuestionClick }: ActionBarProps) => {
-  const { featuresMap } = useFeatureStore();
-
-  const isEnabled = featuresMap.get('admin:questions:create')?.isEnabled;
+  const isEnabled = useFeatureFlag(FEATURE_CREATE_QUESTION);
 
   return (
     <>
