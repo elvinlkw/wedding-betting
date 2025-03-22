@@ -31,6 +31,10 @@ const pages = [
     name: 'User Answers',
     url: PATHS.USER_ANSWERS_PAGE,
   },
+  {
+    name: 'Features',
+    url: PATHS.FEATURES_PAGE,
+  },
 ];
 
 const LogoLink = styled(Link)({
