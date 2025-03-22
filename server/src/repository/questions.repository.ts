@@ -5,6 +5,7 @@ export type QuestionModel = {
   question_id: number;
   question_text: string;
   is_enabled: true;
+  is_answer_revealed: boolean;
 };
 
 export type ChoicesModel = {
@@ -20,6 +21,10 @@ export const findAll = (): Promise<QueryResult<QuestionModel[]>> => {
 
 export const findById = (id: string): Promise<QueryResult<QuestionModel>> => {
   return pool.query(`SELECT * FROM questions WHERE question_id = $1`, [id]);
+};
+
+export const findAllRevealed = () => {
+  return pool.query(`SELECT * FROM questions WHERE is_answer_revealed = TRUE;`);
 };
 
 type QuestionWithChoicesResponse = {

@@ -12,6 +12,6 @@ router.get('/', auth, userAnswersController.getUserAnswers);
 /**
  * Create user answer
  */
-router.post('/', auth, userAnswersController.createUserAnswer);
+router.post('/', userAnswersController.createUserAnswer);
 
 export default router;
