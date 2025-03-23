@@ -1,13 +1,18 @@
-import Box from '@mui/material/Box';
-import { NavLink } from 'react-router';
+import { BettingGame } from '../containers';
+import { Spinner } from '../components';
+import { Typography } from '@mui/material';
+import { useGameQuestions } from '../api/hooks/useQuestions';
 
 export const BettingGamePage = () => {
-  return (
-    <Box>
-      <div>
-        <NavLink to="/admin">Admin</NavLink>
-        <div>BettingGame</div>
-      </div>
-    </Box>
-  );
+  const { data, isLoading } = useGameQuestions();
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (!data) {
+    return <Typography>No Questions Found</Typography>;
+  }
+
+  return <BettingGame gameQuestions={data} />;
 };

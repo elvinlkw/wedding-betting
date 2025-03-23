@@ -1,5 +1,5 @@
 import { Box, Container, Switch, Typography } from '@mui/material';
-import { Feature } from '../api/services/features';
+import { Feature } from '../api/services/features.service';
 import { useFeatureStore } from '../store/featureStore';
 import { useToggleFeature } from '../api/hooks/useFeatures';
 

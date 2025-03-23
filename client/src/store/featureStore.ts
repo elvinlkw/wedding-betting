@@ -1,4 +1,4 @@
-import { Feature } from '../api/services/features';
+import { Feature } from '../api/services/features.service';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 

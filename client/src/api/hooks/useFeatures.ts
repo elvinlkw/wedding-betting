@@ -1,4 +1,4 @@
-import featuresService, { Feature } from '../services/features';
+import featuresService, { Feature } from '../services/features.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFeatureStore } from '../../store/featureStore';
 
