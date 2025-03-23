@@ -6,8 +6,9 @@ import theme from '../../../theme';
 import { useScreenOrientation } from '../../../hooks';
 
 type NavigationButtonProps = {
-  onPreviousClick: () => void;
-  onNextClick: () => void;
+  onPreviousClick?: () => void;
+  onNextClick?: () => void;
+  onSubmit?: () => void;
   currentPage: number;
   totalCount: number;
 };
@@ -15,6 +16,7 @@ type NavigationButtonProps = {
 export const NavigationButton = ({
   onPreviousClick,
   onNextClick,
+  onSubmit,
   currentPage,
   totalCount,
 }: NavigationButtonProps) => {
@@ -54,11 +56,10 @@ export const NavigationButton = ({
             Previous
           </Button>
           <Button
-            disabled={currentPage === totalCount - 1}
             variant="contained"
-            onClick={onNextClick}
+            onClick={currentPage === totalCount ? onSubmit : onNextClick}
           >
-            Next
+            {currentPage === totalCount ? 'Submit' : 'Next'}
           </Button>
         </Stack>
       </Container>

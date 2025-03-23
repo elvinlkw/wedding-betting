@@ -1,5 +1,6 @@
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
+import { NameField } from './components/nameField';
 import { NavigationButton } from './components/navigationButtons';
 import { QuestionItem } from './components/questionItem';
 import styled from '@emotion/styled';
@@ -27,7 +28,7 @@ type FormValues = {
 export const BettingGameContainer = ({
   gameQuestions,
 }: BettingGameContainerProps) => {
-  const [pageState, setPageState] = useState(0);
+  const [pageState, setPageState] = useState(gameQuestions.length);
   const [formValues, setFormValues] = useState<FormValues>({
     firstName: '',
     lastName: '',
@@ -36,6 +37,17 @@ export const BettingGameContainer = ({
       choiceId: null,
     })),
   });
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    console.log('submitting', formValues);
+  };
 
   return (
     <div>
@@ -49,28 +61,37 @@ export const BettingGameContainer = ({
       />
 
       <Form>
-        <QuestionItem
-          question={gameQuestions[pageState]}
-          selectedChoice={formValues.answers[pageState].choiceId}
-          onChoiceClick={(choiceId) =>
-            setFormValues((prevValues) => {
-              const answers = [...prevValues.answers];
-              answers[pageState].choiceId = choiceId;
+        {pageState < gameQuestions.length ? (
+          <QuestionItem
+            question={gameQuestions[pageState]}
+            selectedChoice={formValues.answers[pageState].choiceId}
+            onChoiceClick={(choiceId) =>
+              setFormValues((prevValues) => {
+                const answers = [...prevValues.answers];
+                answers[pageState].choiceId = choiceId;
 
-              return {
-                ...prevValues,
-                answers,
-              };
-            })
-          }
-        />
+                return {
+                  ...prevValues,
+                  answers,
+                };
+              })
+            }
+          />
+        ) : (
+          <NameField
+            firstName={formValues.firstName}
+            lastName={formValues.lastName}
+            onNameChange={handleNameChange}
+          />
+        )}
 
         <NavigationButton
           totalCount={gameQuestions.length}
           currentPage={pageState}
+          onSubmit={handleSubmit}
           onPreviousClick={() => setPageState((prev) => Math.max(0, prev - 1))}
           onNextClick={() =>
-            setPageState((prev) => Math.min(gameQuestions.length - 1, prev + 1))
+            setPageState((prev) => Math.min(gameQuestions.length, prev + 1))
           }
         />
       </Form>
