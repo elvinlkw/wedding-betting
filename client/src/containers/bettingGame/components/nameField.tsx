@@ -1,10 +1,11 @@
 import { Container, TextField, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import theme from '../../../theme';
 
 type NameFieldProps = {
   firstName: string;
   lastName: string;
+  formError: string | null;
   onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -12,11 +13,28 @@ export const NameField = ({
   firstName,
   lastName,
   onNameChange,
+  formError,
 }: NameFieldProps) => {
   const [validationErrors, setValidationErrors] = useState<{
     firstName?: string;
     lastName?: string;
   }>({});
+
+  useEffect(() => {
+    if (formError) {
+      setValidationErrors({
+        ...(firstName.length === 0
+          ? { firstName: 'This is a required field' }
+          : {}),
+        ...(lastName.length === 0
+          ? { lastName: 'This is a required field' }
+          : {}),
+      });
+      return;
+    }
+
+    setValidationErrors({});
+  }, [formError, firstName, lastName]);
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>): void => {

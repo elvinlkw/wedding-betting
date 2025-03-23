@@ -2,7 +2,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
+import { Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 import theme from '../../../theme';
+import { useFormStatus } from 'react-dom';
 import { useScreenOrientation } from '../../../hooks';
 
 type NavigationButtonProps = {
@@ -11,6 +14,7 @@ type NavigationButtonProps = {
   onSubmit?: () => void;
   currentPage: number;
   totalCount: number;
+  formError: string | null;
 };
 
 export const NavigationButton = ({
@@ -19,8 +23,11 @@ export const NavigationButton = ({
   onSubmit,
   currentPage,
   totalCount,
+  formError,
 }: NavigationButtonProps) => {
   const { isPortrait } = useScreenOrientation();
+
+  const status = useFormStatus();
 
   return (
     <Box
@@ -43,21 +50,35 @@ export const NavigationButton = ({
           pb: isPortrait ? theme.space.space0 : theme.space.space8,
         }}
       >
+        {formError && (
+          <Typography
+            color="error"
+            sx={{
+              mb: theme.space.space3,
+              display: 'flex',
+              alignItems: 'center',
+              gap: theme.space.space2,
+              fontSize: '14px',
+            }}
+          >
+            <WarningIcon fontSize="small" />
+            {formError}
+          </Typography>
+        )}
         <Stack
           direction="column"
           justifyContent="space-between"
           gap={theme.space.space2}
         >
-          <Button
-            disabled={currentPage === 0}
-            variant="outlined"
-            onClick={onPreviousClick}
-          >
-            Previous
-          </Button>
+          {currentPage > 0 && (
+            <Button variant="outlined" onClick={onPreviousClick}>
+              Previous
+            </Button>
+          )}
           <Button
             variant="contained"
             onClick={currentPage === totalCount ? onSubmit : onNextClick}
+            disabled={status.pending}
           >
             {currentPage === totalCount ? 'Submit' : 'Next'}
           </Button>
