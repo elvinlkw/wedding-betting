@@ -15,7 +15,6 @@ import { PATHS } from '../../routing';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import WcIcon from '@mui/icons-material/Wc';
 import styled from '@emotion/styled';
 
 const pages = [
@@ -80,7 +79,6 @@ export const Navbar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LogoLink to={PATHS.LANDING_PAGE}>
-            <WcIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -134,7 +132,6 @@ export const Navbar = () => {
               ))}
             </Menu>
           </Box>
-          <WcIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -152,6 +149,7 @@ export const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
               <Button
+                key={idx}
                 onClick={handleCloseNavMenu}
                 sx={{
                   my: 2,
@@ -159,7 +157,7 @@ export const Navbar = () => {
                   display: 'block',
                 }}
               >
-                <NavLink to={page.url} key={idx} end>
+                <NavLink to={page.url} end>
                   {({ isActive }) => (
                     <Typography
                       sx={{

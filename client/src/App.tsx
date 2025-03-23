@@ -1,9 +1,17 @@
-import { AdminPage, FeaturesPage, LoginPage, UserAnswers } from './pages';
-import { NavLink, Outlet, Route, Routes } from 'react-router';
+import {
+  AdminPage,
+  BettingGamePage,
+  FeaturesPage,
+  LeaderboardPage,
+  LoginPage,
+  UserAnswers,
+} from './pages';
+import { Outlet, Route, Routes } from 'react-router';
 import { useEffect, useState } from 'react';
 import { AuthContext } from './context';
-
 import { type AuthUser } from './types/auth';
+
+import { BottomNavbar } from './containers/bottomNavbar/bottomNavbar';
 import { Navbar } from './containers';
 import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
@@ -32,16 +40,19 @@ function App() {
     <AuthContext.Provider value={{ authUser, setAuthUser }}>
       <Routes>
         <Route
-          index
+          path="/"
           element={
-            <div>
-              <div>
-                <NavLink to="/admin">Admin</NavLink>
-              </div>
-            </div>
+            <>
+              <Outlet />
+              <BottomNavbar />
+            </>
           }
-        />
-        <Route path="/login" element={<LoginPage />} />
+        >
+          <Route index element={<BettingGamePage />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+
         {/* ADMIN ROUTES */}
         <Route
           path={PATHS.ADMIN_PAGE}

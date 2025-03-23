@@ -17,12 +17,15 @@ export const FeaturesPage = () => {
 
   return (
     <Container>
-      <Typography>Features</Typography>
+      <Typography variant="h4" align="center">
+        List of Features
+      </Typography>
       {features.map((feature) => (
         <Box
+          key={feature.featureId}
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'max-content 1fr',
+            gridTemplateColumns: '175px 1fr',
             justifyContent: 'space-between',
             alignItems: 'center',
             gap: '16px',

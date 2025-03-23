@@ -1,4 +1,8 @@
 import {
+  FEATURE_DELETE_QUESTION,
+  FEATURE_UPDATE_QUESTION,
+} from '../../../features';
+import {
   Question,
   useDeleteQuestion,
   usePatchQuestion,
@@ -19,6 +23,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import { Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useFeatureFlag } from '../../../hooks/useFeatureFlag.hooks';
 import { useState } from 'react';
 
 export const Accordion = ({
@@ -39,6 +44,9 @@ export const Accordion = ({
 
   const { mutateAsync: deleteQuestion } = useDeleteQuestion();
   const { mutateAsync: patchQuestion } = usePatchQuestion();
+
+  const isDeleteQuestionEnabled = useFeatureFlag(FEATURE_DELETE_QUESTION);
+  const isUpdateQuestionEnabled = useFeatureFlag(FEATURE_UPDATE_QUESTION);
 
   const handleDelete = async () => {
     if (!questionToDelete) {
@@ -138,29 +146,33 @@ export const Accordion = ({
                       )}
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Edit">
-                    <IconButton
-                      aria-label="Edit Button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        onEditClick?.(event, question);
-                      }}
-                    >
-                      <ModeEditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton
-                      color="error"
-                      aria-label="Delete Button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setQuestionToDelete(question);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
+                  {isUpdateQuestionEnabled && (
+                    <Tooltip title="Edit">
+                      <IconButton
+                        aria-label="Edit Button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onEditClick?.(event, question);
+                        }}
+                      >
+                        <ModeEditIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                  {isDeleteQuestionEnabled && (
+                    <Tooltip title="Delete">
+                      <IconButton
+                        color="error"
+                        aria-label="Delete Button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setQuestionToDelete(question);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </Box>
               </Box>
             </AccordionDetails>

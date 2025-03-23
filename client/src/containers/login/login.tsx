@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
-import { type LoginRequest, useAuthLogin } from '../../api/auth';
+import { type LoginRequest, useAuth, useAuthLogin } from '../../api/auth';
 import { object, string } from 'yup';
 import { use, useEffect, useState } from 'react';
 import { AuthContext } from '../../context';
@@ -50,6 +50,7 @@ const formFieldCss = css({
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { data } = useAuth();
   const auth = use(AuthContext);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +67,12 @@ export const Login = () => {
   const { mutate } = useAuthLogin();
 
   useEffect(() => {
+    if (data) {
+      auth?.setAuthUser(data);
+    }
+  }, [data, auth]);
+
+  useEffect(() => {
     if (Cookies.get('jwttoken') && auth?.authUser) {
       navigate(PATHS.ADMIN_PAGE);
     }
@@ -74,7 +81,6 @@ export const Login = () => {
   const submit = (data: LoginRequest) => {
     mutate(data, {
       onSuccess: (response) => {
-        console.log('Login successful:', response);
         auth?.setAuthUser({
           id: response.id,
         });
