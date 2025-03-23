@@ -1,5 +1,3 @@
-import { Box } from '@mui/material';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
@@ -7,27 +5,18 @@ import FormLabel from '@mui/material/FormLabel';
 import { GameQuestion } from '../../../api/services/questions.service';
 import Stack from '@mui/material/Stack';
 import theme from '../../../theme';
-import { useScreenOrientation } from '../../../hooks';
-import { useState } from 'react';
 
 type QuestionItemProps = {
   question: GameQuestion;
-  onPreviousClick?: () => void;
-  onNextClick?: () => void;
-  totalCount: number;
-  currentPage: number;
+  selectedChoice: number | null;
+  onChoiceClick: (choiceId: number) => void;
 };
 
 export const QuestionItem = ({
   question,
-  currentPage,
-  totalCount,
-  onPreviousClick,
-  onNextClick,
+  selectedChoice,
+  onChoiceClick,
 }: QuestionItemProps) => {
-  const [selected, setSelected] = useState<number>(-1);
-  const orientation = useScreenOrientation();
-
   return (
     <Container
       sx={{
@@ -68,11 +57,11 @@ export const QuestionItem = ({
                 fontSize: '16px',
                 borderColor: theme.palette.sage.light,
                 color:
-                  selected === choice.choiceId
+                  selectedChoice === choice.choiceId
                     ? theme.palette.sage.contrastText
                     : '#68604D',
                 background:
-                  selected === choice.choiceId
+                  selectedChoice === choice.choiceId
                     ? theme.palette.sage.main
                     : 'inherit',
 
@@ -81,59 +70,15 @@ export const QuestionItem = ({
                 },
               }}
               label={choice.choiceText}
-              variant={selected === choice.choiceId ? 'filled' : 'outlined'}
+              variant={
+                selectedChoice === choice.choiceId ? 'filled' : 'outlined'
+              }
               onClick={() => {
-                setSelected(choice.choiceId);
+                onChoiceClick(choice.choiceId);
               }}
             />
           ))}
         </Stack>
-
-        <Box
-          sx={
-            orientation === 'portrait'
-              ? {
-                  position: 'fixed',
-                  left: 0,
-                  right: 0,
-                  bottom: '56px',
-                  pb: theme.space.space4,
-                }
-              : undefined
-          }
-        >
-          <Container
-            maxWidth="sm"
-            sx={{
-              mt: theme.space.space4,
-              pb:
-                orientation === 'landscape'
-                  ? theme.space.space8
-                  : theme.space.space0,
-            }}
-          >
-            <Stack
-              direction="column"
-              justifyContent="space-between"
-              gap={theme.space.space2}
-            >
-              <Button
-                disabled={currentPage === 0}
-                variant="outlined"
-                onClick={onPreviousClick}
-              >
-                Previous
-              </Button>
-              <Button
-                disabled={selected === -1 || currentPage === totalCount - 1}
-                variant="contained"
-                onClick={onNextClick}
-              >
-                Next
-              </Button>
-            </Stack>
-          </Container>
-        </Box>
       </FormControl>
     </Container>
   );

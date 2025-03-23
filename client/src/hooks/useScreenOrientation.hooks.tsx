@@ -8,7 +8,13 @@ const getOrientation = (): Orientation => {
     : 'landscape';
 };
 
-export const useScreenOrientation = (): Orientation => {
+type UseScreenOrientationReturnType = {
+  orientation: Orientation;
+  isPortrait: boolean;
+  isLandscape: boolean;
+};
+
+export const useScreenOrientation = (): UseScreenOrientationReturnType => {
   const [orientation, setOrientation] = useState(getOrientation());
 
   const updateOrientation = () => {
@@ -23,5 +29,9 @@ export const useScreenOrientation = (): Orientation => {
     };
   }, []);
 
-  return orientation;
+  return {
+    orientation,
+    isPortrait: window.screen.orientation.type.includes('portrait'),
+    isLandscape: window.screen.orientation.type.includes('landscape'),
+  };
 };
