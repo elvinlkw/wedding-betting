@@ -2,6 +2,7 @@ import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { QuestionItem } from './components/questionItem';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 
 const Form = styled.form({
   display: 'flex',
@@ -16,6 +17,8 @@ type BettingGameContainerProps = {
 export const BettingGameContainer = ({
   gameQuestions,
 }: BettingGameContainerProps) => {
+  const [pageState, setPageState] = useState(0);
+
   return (
     <div>
       <Header
@@ -28,7 +31,15 @@ export const BettingGameContainer = ({
       />
 
       <Form>
-        <QuestionItem question={gameQuestions[0]} />
+        <QuestionItem
+          question={gameQuestions[pageState]}
+          totalCount={gameQuestions.length}
+          currentPage={pageState}
+          onPreviousClick={() => setPageState((prev) => Math.max(0, prev - 1))}
+          onNextClick={() =>
+            setPageState((prev) => Math.min(gameQuestions.length - 1, prev + 1))
+          }
+        />
       </Form>
     </div>
   );
