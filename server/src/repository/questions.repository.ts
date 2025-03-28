@@ -33,9 +33,13 @@ type QuestionWithChoicesResponse = {
 
 export const findAllWithChoices = ({
   isAdmin,
-}: { isAdmin?: boolean } = {}): Promise<
+  includeRevealed,
+}: { isAdmin?: boolean; includeRevealed?: boolean } = {}): Promise<
   QueryResult<QuestionWithChoicesResponse>
 > => {
+  const whereClause =
+    includeRevealed === false ? `WHERE q.is_answer_revealed = FALSE` : '';
+
   return pool.query(`SELECT 
     q.question_id,
     q.question_text,
@@ -52,6 +56,7 @@ export const findAllWithChoices = ({
     END AS choices 
   FROM questions q
   LEFT JOIN question_choices qc ON q.question_id = qc.question_id
+  ${whereClause}
   GROUP BY q.question_id
   ORDER BY q.question_id ASC`);
 };

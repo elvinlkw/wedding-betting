@@ -7,9 +7,10 @@ import { ErrorType } from '../types';
 export const getAllQuestions = async (req: Request, res: Response) => {
   try {
     const includeChoices = req.query.includeChoices === 'true';
+    const includeRevealed = req.query.includeRevealed === 'true';
 
     const allQuestions = includeChoices
-      ? await questionsRepository.findAllWithChoices()
+      ? await questionsRepository.findAllWithChoices({ includeRevealed })
       : await questionsRepository.findAll();
     const response = {
       count: allQuestions.rowCount,

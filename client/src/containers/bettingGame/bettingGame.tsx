@@ -1,12 +1,13 @@
-import { Typography } from '@mui/material';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
 import { NavigationButton } from './components/navigationButtons';
 import { QuestionItem } from './components/questionItem';
+import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import theme from '../../theme';
+import { useCreateUserAnswer } from '../../api/hooks/useUserAnswers';
+import { useState } from 'react';
 
 const Form = styled.form({
   display: 'flex',
@@ -42,6 +43,8 @@ export const BettingGameContainer = ({
     })),
   });
 
+  const { mutateAsync: createUserAnswer } = useCreateUserAnswer();
+
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -52,7 +55,7 @@ export const BettingGameContainer = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formValues.firstName || !formValues.lastName) {
       setFormError('Please provide your name');
       return;
@@ -64,6 +67,7 @@ export const BettingGameContainer = ({
     }
 
     try {
+      await createUserAnswer(formValues);
       setIsSubmitSuccessful(true);
     } catch (err) {
       console.error(err);

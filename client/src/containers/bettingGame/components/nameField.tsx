@@ -90,6 +90,7 @@ export const NameField = ({
         onFocus={handleFocus}
         error={!!validationErrors.firstName}
         helperText={validationErrors.firstName}
+        autoComplete="off"
       />
 
       <TextField
@@ -103,6 +104,7 @@ export const NameField = ({
         onFocus={handleFocus}
         error={!!validationErrors.lastName}
         helperText={validationErrors.lastName}
+        autoComplete="off"
       />
     </Container>
   );
