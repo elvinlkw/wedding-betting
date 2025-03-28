@@ -1,13 +1,6 @@
-import { type PaletteColor, createTheme } from '@mui/material';
+import { createTheme } from '@mui/material';
 
 declare module '@mui/material/styles' {
-  interface Palette {
-    sage: PaletteColor;
-  }
-  interface PaletteOptions {
-    sage: PaletteColor;
-  }
-
   interface Theme {
     space: {
       space0: string;
@@ -40,14 +33,6 @@ declare module '@mui/material/styles' {
 }
 
 const theme = createTheme({
-  palette: {
-    sage: {
-      main: '#87ae73',
-      light: '#bad1af',
-      dark: '#689154',
-      contrastText: '#ffffff',
-    },
-  },
   space: {
     space0: '0',
     space1: '4px',

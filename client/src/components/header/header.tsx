@@ -13,10 +13,7 @@ export const Header = ({ title, content }: HeaderProps) => {
       sx={{
         p: '54px 32px',
         background:
-          // 'linear-gradient(0.25turn,rgb(88, 138, 159), rgb(223, 156, 84))',
-          // 'linear-gradient(0.25turn,  #CDC1A7, #87ae73)',
-          // 'linear-gradient(to right, #A8BBA6, #7C8B72);',
-          'linear-gradient(to bottom right, #87ae73, #A8BBA6, #6E7A52)',
+          'linear-gradient(0.25turn,rgb(88, 138, 159), rgb(223, 156, 84))',
       }}
     >
       <Typography

@@ -55,20 +55,8 @@ export const QuestionItem = ({
                 width: '100%',
                 height: theme.space.space6,
                 fontSize: '16px',
-                borderColor: theme.palette.sage.light,
-                color:
-                  selectedChoice === choice.choiceId
-                    ? theme.palette.sage.contrastText
-                    : '#68604D',
-                background:
-                  selectedChoice === choice.choiceId
-                    ? theme.palette.sage.main
-                    : 'inherit',
-
-                ':hover': {
-                  background: theme.palette.sage.main,
-                },
               }}
+              color="primary"
               label={choice.choiceText}
               variant={
                 selectedChoice === choice.choiceId ? 'filled' : 'outlined'
