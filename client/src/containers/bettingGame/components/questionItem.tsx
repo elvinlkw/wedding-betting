@@ -32,7 +32,7 @@ export const QuestionItem = ({
           id="demo-radio-buttons-group-label"
           sx={{
             fontSize: theme.space.space5,
-            mt: theme.space.space6,
+            mt: theme.space.space2,
             color: '#68604D',
             textAlign: 'center',
           }}

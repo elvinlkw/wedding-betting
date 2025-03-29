@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Chip, Container, Stack, Typography } from '@mui/material';
 import { FEATURE_PLAY_GAME } from '../../features';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
@@ -123,6 +123,67 @@ export const BettingGameContainer = ({
         </Typography>
       ) : (
         <Form>
+          <Container>
+            <Stack
+              direction="row"
+              sx={{
+                mt: 1,
+                display: 'flex',
+                gap: '8px',
+                justifyContent: 'center',
+              }}
+            >
+              {gameQuestions.map((qu, idx) => {
+                const hasChoice =
+                  formValues.answers[idx].choiceId !== null
+                    ? 'primary'
+                    : 'default';
+
+                return (
+                  <Chip
+                    onClick={() => {
+                      setPageState(idx);
+                    }}
+                    sx={{
+                      border: pageState === idx ? '1px solid' : 'none',
+                      borderColor:
+                        pageState === idx
+                          ? theme.palette.primary.main
+                          : 'transparent',
+                      transform: pageState === idx ? 'scale(1.1)' : 'none',
+                      borderRadius: '50%',
+                    }}
+                    label={idx + 1}
+                    color={hasChoice}
+                    variant="filled"
+                  />
+                );
+              })}
+              <Chip
+                onClick={() => {
+                  setPageState(gameQuestions.length);
+                }}
+                sx={{
+                  border:
+                    pageState === gameQuestions.length ? '1px solid' : 'none',
+                  borderColor:
+                    pageState === gameQuestions.length
+                      ? theme.palette.primary.main
+                      : 'transparent',
+                  transform:
+                    pageState === gameQuestions.length ? 'scale(1.1)' : 'none',
+                  borderRadius: '50%',
+                }}
+                label={gameQuestions.length + 1}
+                color={
+                  formValues.firstName.length && formValues.lastName.length
+                    ? 'primary'
+                    : 'default'
+                }
+                variant="filled"
+              />
+            </Stack>
+          </Container>
           {pageState < gameQuestions.length ? (
             <QuestionItem
               question={gameQuestions[pageState]}
