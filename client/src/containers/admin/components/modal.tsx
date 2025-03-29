@@ -28,6 +28,7 @@ const schema = object({
     .of(
       object({
         choiceText: string().required('Choice text is required'),
+        choiceTextFr: string().required('Choice text for french is required'),
         isRightAnswer: boolean().default(false),
       })
     )
@@ -38,6 +39,7 @@ const schema = object({
 type FormValuesChoices = {
   choiceId?: number;
   choiceText: string;
+  choiceTextFr: string;
   isRightAnswer: boolean;
 };
 
@@ -90,6 +92,7 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
           onClick={() =>
             append({
               choiceText: '',
+              choiceTextFr: '',
               isRightAnswer: false,
             })
           }
@@ -104,7 +107,10 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
         </Button>
       </Box>
       {fields.map((item, index) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }} key={item.id}>
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', gap: '2px' }}
+          key={item.id}
+        >
           <Controller
             key={`choice-text-${item.id}`}
             name={`choices.${index}.choiceText`}
@@ -112,6 +118,19 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
               <Input
                 {...field}
                 name={`choices.${index}.text`}
+                sx={{ width: '100%' }}
+                type="text"
+              />
+            )}
+            control={control}
+          />
+          <Controller
+            key={`choice-text-fr-${item.id}`}
+            name={`choices.${index}.choiceTextFr`}
+            render={({ field }) => (
+              <Input
+                {...field}
+                name={`choices.${index}.textFr`}
                 sx={{ width: '100%' }}
                 type="text"
               />

@@ -3,17 +3,27 @@ import camelcaseKeys from 'camelcase-keys';
 import pool from '../db';
 import { choicesRepository, questionsRepository } from '../repository';
 import { ErrorType, LanguageType } from '../types';
-import { QuestionModel } from '../repository/questions.repository';
+import { QuestionWithChoicesResponse } from '../repository/questions.repository';
 
-const getQuestionText = <T extends Partial<QuestionModel>>(
+const getQuestionText = <T extends Partial<QuestionWithChoicesResponse>>(
   row: T,
   language: LanguageType
 ) => {
-  console.log(row);
   const questionText =
     language === 'fr' ? row.question_text_fr : row.question_text;
   row.question_text = questionText;
   delete row.question_text_fr;
+
+  if (row.choices) {
+    row.choices = row.choices.map((ch) => {
+      const choiceText = language === 'fr' ? ch.choice_text_fr : ch.choice_text;
+      ch.choice_text = choiceText;
+      // @ts-ignore: Disable TypeScript error on the next line
+      delete ch.choice_text_fr;
+
+      return ch;
+    });
+  }
 
   return camelcaseKeys(row, { deep: true });
 };
@@ -222,7 +232,6 @@ export const createChoice = async (req: Request, res: Response) => {
       return;
     }
 
-    // TODO: improve this
     const allChoices = await choicesRepository.findById(questionId);
     if (allChoices.rowCount) {
       await choicesRepository.removeAll(questionId);
@@ -234,6 +243,7 @@ export const createChoice = async (req: Request, res: Response) => {
       (choice: {
         choiceId?: number;
         choiceText: string;
+        choiceTextFr: string;
         isRightAnswer: boolean;
       }) => {
         return choicesRepository.insert(questionId, choice);
@@ -261,6 +271,7 @@ type ChoiceUpdateParams = {
 type ChoiceUpdateBody = {
   choiceId?: number;
   choiceText: string;
+  choiceTextFr: string;
   isRightAnswer: boolean;
 };
 

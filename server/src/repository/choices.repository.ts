@@ -7,6 +7,7 @@ export type ChoicesModel = {
   question_id: QuestionModel['question_id'];
   is_right_answer: boolean;
   choice_text: string;
+  choice_text_fr: string;
   created_at: Date;
   updated_at: Date;
 };
@@ -23,31 +24,38 @@ export const findById = (id: string): Promise<QueryResult<ChoicesModel>> => {
 
 type ChoicesBody = {
   choiceText: ChoicesModel['choice_text'];
+  choiceTextFr: ChoicesModel['choice_text_fr'];
   isRightAnswer: ChoicesModel['is_right_answer'];
 };
 
 export const insert = (
   questionId: string,
-  { choiceText, isRightAnswer }: ChoicesBody
+  { choiceText, isRightAnswer, choiceTextFr }: ChoicesBody
 ): Promise<QueryResult<ChoicesModel>> => {
   return pool.query(
     `INSERT INTO question_choices (
-        question_id, is_right_answer, choice_text
+        question_id, is_right_answer, choice_text, choice_text_fr
       ) VALUES (
-        $1, $2, $3
+        $1, $2, $3, $4
       ) RETURNING *`,
-    [questionId, isRightAnswer, choiceText]
+    [questionId, isRightAnswer, choiceText, choiceTextFr]
   );
 };
 
 export const update = (
   questionId: string,
   choiceId: number,
-  { choiceText, isRightAnswer }: ChoicesBody
+  { choiceText, choiceTextFr, isRightAnswer }: ChoicesBody
 ): Promise<QueryResult<ChoicesModel>> => {
   return pool.query(
-    `UPDATE question_choices SET choice_text = $1, is_right_answer = $2 WHERE question_id = $3 AND choice_id = $4 RETURNING *`,
-    [choiceText, isRightAnswer, questionId, choiceId]
+    `UPDATE question_choices 
+    SET 
+      choice_text = $1, 
+      is_right_answer = $2,
+      choice_text_fr = $3
+    WHERE question_id = $4 AND choice_id = $5
+    RETURNING *`,
+    [choiceText, isRightAnswer, choiceTextFr, questionId, choiceId]
   );
 };
 

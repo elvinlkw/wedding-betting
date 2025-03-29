@@ -29,7 +29,7 @@ export const findAllRevealed = () => {
   return pool.query(`SELECT * FROM questions WHERE is_answer_revealed = TRUE;`);
 };
 
-type QuestionWithChoicesResponse = {
+export type QuestionWithChoicesResponse = {
   choices: ChoicesModel[];
 } & QuestionModel;
 
@@ -52,6 +52,7 @@ export const findAllWithChoices = ({
       ELSE json_agg(
         json_build_object(
           'choice_id', qc.choice_id, 
+          'choice_text_fr', qc.choice_text_fr,
           'choice_text', qc.choice_text
           ${isAdmin ? ", 'is_right_answer', qc.is_right_answer" : ''}
         )

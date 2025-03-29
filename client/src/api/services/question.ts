@@ -10,6 +10,7 @@ import axios from 'axios';
 export type Choice = {
   choiceId: number;
   choiceText: string;
+  choiceTextFr: string;
   isRightAnswer: boolean;
 };
 
@@ -175,6 +176,7 @@ export const useUpdateQuestion = () => {
       choices: {
         choiceId?: Choice['choiceId'];
         choiceText: Choice['choiceText'];
+        choiceTextFr: Choice['choiceTextFr'];
         isRightAnswer: Choice['isRightAnswer'];
       }[];
     }) => {
