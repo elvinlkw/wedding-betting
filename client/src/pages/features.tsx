@@ -19,6 +19,7 @@ export const FeaturesPage = () => {
   const handleFeatureToggle = async (feature: Feature) => {
     if (feature.featureKey === FEATURE_PLAY_GAME && hasRevealedAnswers) {
       alert('All answers must be unrevealed to enable the game');
+      return;
     }
 
     await toggleFeature({
