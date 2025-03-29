@@ -14,7 +14,13 @@ export type GameQuestion = {
 
 class Questions {
   async getGameQuestions(): Promise<GameQuestion[]> {
-    const response = await axios.get('/api/questions?includeChoices=true');
+    const gameLanguage = localStorage.getItem('gameLanguage') || 'en';
+
+    const response = await axios.get('/api/questions?includeChoices=true', {
+      headers: {
+        'Accept-Language': gameLanguage,
+      },
+    });
     return response.data.data;
   }
 }

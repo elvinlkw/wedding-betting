@@ -2,10 +2,25 @@ import { Request, Response } from 'express';
 import camelcaseKeys from 'camelcase-keys';
 import pool from '../db';
 import { choicesRepository, questionsRepository } from '../repository';
-import { ErrorType } from '../types';
+import { ErrorType, LanguageType } from '../types';
+import { QuestionModel } from '../repository/questions.repository';
+
+const getQuestionText = <T extends Partial<QuestionModel>>(
+  row: T,
+  language: LanguageType
+) => {
+  console.log(row);
+  const questionText =
+    language === 'fr' ? row.question_text_fr : row.question_text;
+  row.question_text = questionText;
+  delete row.question_text_fr;
+
+  return camelcaseKeys(row, { deep: true });
+};
 
 export const getAllQuestions = async (req: Request, res: Response) => {
   try {
+    const language = (req.headers['accept-language'] || 'en') as LanguageType;
     const includeChoices = req.query.includeChoices === 'true';
     const includeRevealed = req.query.includeRevealed === 'true';
 
@@ -14,7 +29,7 @@ export const getAllQuestions = async (req: Request, res: Response) => {
       : await questionsRepository.findAll();
     const response = {
       count: allQuestions.rowCount,
-      data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
+      data: allQuestions.rows.map((row: any) => getQuestionText(row, language)),
     };
     res.json(response);
   } catch (err) {
@@ -91,7 +106,8 @@ export const patch = async (req: Request, res: Response) => {
       return;
     }
 
-    const { questionText, isEnabled, isAnswerRevealed } = req.body;
+    const { questionText, isEnabled, isAnswerRevealed, questionTextFr } =
+      req.body;
 
     const fieldsToUpdate = [];
     const values = [];
@@ -100,6 +116,11 @@ export const patch = async (req: Request, res: Response) => {
     if (questionText !== undefined) {
       fieldsToUpdate.push('question_text = $' + (fieldsToUpdate.length + 1));
       values.push(questionText);
+    }
+
+    if (questionTextFr !== undefined) {
+      fieldsToUpdate.push('question_text_fr = $' + (fieldsToUpdate.length + 1));
+      values.push(questionTextFr);
     }
 
     if (isEnabled !== undefined) {
