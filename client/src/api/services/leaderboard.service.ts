@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../interceptors';
 
 type UserScoreboard = {
   userId: number;
@@ -16,7 +16,7 @@ export type LeaderboardResponse = {
 
 class Leaderboard {
   async getLeaderboard(): Promise<LeaderboardResponse> {
-    const response = await axios.get('/api/scoreboard');
+    const response = await apiClient.get('/api/scoreboard');
     return response.data;
   }
 }

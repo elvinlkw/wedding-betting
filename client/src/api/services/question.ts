@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import apiClient from '../interceptors';
 
 export type Choice = {
   choiceId: number;
@@ -28,7 +28,7 @@ const getQuestionsForAdmins = async (): Promise<Question[]> => {
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.get('/api/questions/admin', config);
+  const response = await apiClient.get('/api/questions/admin', config);
   return response.data.data;
 };
 
@@ -48,7 +48,7 @@ const createQuestion = async (
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.post(
+  const response = await apiClient.post(
     '/api/questions',
     {
       text,
@@ -69,7 +69,7 @@ const createQuestionChoice = async (
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.post(
+  const response = await apiClient.post(
     `/api/questions/${questionId}/choices`,
     choices,
     config
@@ -131,7 +131,7 @@ const updateQuestion = async (
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.put(
+  const response = await apiClient.put(
     `/api/questions/${questionId}`,
     {
       text,
@@ -152,7 +152,7 @@ const updateQuestionChoice = async (
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.put(
+  const response = await apiClient.put(
     `/api/questions/${questionId}/choices`,
     choices,
     config
@@ -221,7 +221,10 @@ const deleteQuestion = async (questionId: number): Promise<void> => {
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.delete(`/api/questions/${questionId}`, config);
+  const response = await apiClient.delete(
+    `/api/questions/${questionId}`,
+    config
+  );
   return response.data;
 };
 
@@ -263,7 +266,7 @@ const patchQuestion = async (
     body.questionTextFr = questionTextFr;
   }
 
-  const response = await axios.patch(
+  const response = await apiClient.patch(
     `/api/questions/${questionId}`,
     body,
     config

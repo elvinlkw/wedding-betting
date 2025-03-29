@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../interceptors';
 
 type Choice = {
   choiceId: number;
@@ -16,7 +16,7 @@ class Questions {
   async getGameQuestions(): Promise<GameQuestion[]> {
     const gameLanguage = localStorage.getItem('gameLanguage') || 'en';
 
-    const response = await axios.get('/api/questions?includeChoices=true', {
+    const response = await apiClient.get('/api/questions?includeChoices=true', {
       headers: {
         'Accept-Language': gameLanguage,
       },

@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import apiClient from '../interceptors';
 
 type Answer = {
   questionId: number;
@@ -32,12 +32,12 @@ class UserAnswers {
         'x-auth-token': Cookies.get('jwttoken'),
       },
     };
-    const response = await axios.get('/api/user-answers', config);
+    const response = await apiClient.get('/api/user-answers', config);
     return response.data.data;
   }
 
   async createUserAnswer(data: CreateUserAnswerBody) {
-    const response = await axios.post('/api/user-answers', data);
+    const response = await apiClient.post('/api/user-answers', data);
     return response.data;
   }
 }
