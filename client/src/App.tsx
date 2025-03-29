@@ -6,12 +6,13 @@ import {
   LoginPage,
   UserAnswers,
 } from './pages';
-import { Outlet, Route, Routes } from 'react-router';
+import { Outlet, Route, Routes, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import { AuthContext } from './context';
 import { type AuthUser } from './types/auth';
 
 import { BottomNavbar } from './containers/bottomNavbar/bottomNavbar';
+import { LanguageSelection } from './pages/languageSelection';
 import { Navbar } from './containers';
 import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
@@ -22,9 +23,18 @@ import { useFeatures } from './api';
 
 function App() {
   const { setFeatures } = useFeatureStore();
+  const navigate = useNavigate();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
+  const gameLanguage = localStorage.getItem('gameLanguage');
+
   const { data: featuresData, isLoading } = useFeatures();
+
+  useEffect(() => {
+    if (!gameLanguage) {
+      navigate('/language-selection');
+    }
+  }, [gameLanguage, navigate]);
 
   useEffect(() => {
     if (featuresData) {
@@ -52,6 +62,7 @@ function App() {
           <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
+        <Route path="language-selection" element={<LanguageSelection />} />
 
         {/* ADMIN ROUTES */}
         <Route

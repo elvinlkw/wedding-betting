@@ -133,7 +133,7 @@ export const BettingGameContainer = ({
                 justifyContent: 'center',
               }}
             >
-              {gameQuestions.map((qu, idx) => {
+              {gameQuestions.map((_, idx) => {
                 const hasChoice =
                   formValues.answers[idx].choiceId !== null
                     ? 'primary'
@@ -156,6 +156,7 @@ export const BettingGameContainer = ({
                     label={idx + 1}
                     color={hasChoice}
                     variant="filled"
+                    key={`paginate-${idx}`}
                   />
                 );
               })}
