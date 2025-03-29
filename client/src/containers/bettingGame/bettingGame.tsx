@@ -1,6 +1,6 @@
 import { Chip, Container, Stack, Typography } from '@mui/material';
-import { FEATURE_PLAY_GAME } from '../../features';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { FEATURE_PLAY_GAME } from '../../features';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
