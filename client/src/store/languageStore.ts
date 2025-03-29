@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-type Language = 'en' | 'fr';
+export type Language = 'en' | 'fr';
 
 type State = {
   language: Language;

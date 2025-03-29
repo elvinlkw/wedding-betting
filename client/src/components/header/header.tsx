@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 type HeaderProps = {
   title: ReactNode;
-  content: ReactNode;
+  content?: ReactNode;
 };
 
 export const Header = ({ title, content }: HeaderProps) => {

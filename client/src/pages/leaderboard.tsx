@@ -72,9 +72,10 @@ export const LeaderboardPage = () => {
             sx={{
               display: 'flex',
               justifyContent: 'center',
+              py: 4,
             }}
           >
-            <Typography>
+            <Typography align="center" fontSize={16}>
               <FormattedMessage
                 id="leaderboard.noData"
                 defaultMessage="No leaderboard information available yet. Check back at a later time."

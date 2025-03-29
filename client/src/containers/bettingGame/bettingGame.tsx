@@ -1,6 +1,6 @@
 import { Chip, Container, Stack, Typography } from '@mui/material';
 import { FEATURE_PLAY_GAME } from '../../features';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
@@ -34,6 +34,7 @@ type FormValues = {
 export const BettingGameContainer = ({
   gameQuestions,
 }: BettingGameContainerProps) => {
+  const intl = useIntl();
   const [pageState, setPageState] = useState(0);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
@@ -62,12 +63,22 @@ export const BettingGameContainer = ({
 
   const handleSubmit = async () => {
     if (!formValues.firstName || !formValues.lastName) {
-      setFormError('Please provide your name');
+      setFormError(
+        intl.formatMessage({
+          id: 'homepage.form.error.name',
+          defaultMessage: 'Please provide your name',
+        })
+      );
       return;
     }
 
     if (formValues.answers.some((ans) => ans.choiceId === null)) {
-      setFormError('Please answer all questions');
+      setFormError(
+        intl.formatMessage({
+          id: 'homepage.form.error.answers',
+          defaultMessage: 'Please answer all questions',
+        })
+      );
       return;
     }
 
@@ -83,8 +94,18 @@ export const BettingGameContainer = ({
     return (
       <div>
         <Header
-          title="Sorry"
-          content="The game is now closed! Go and enjoy the party!"
+          title={
+            <FormattedMessage
+              id="homepage.closed.title"
+              defaultMessage="Sorry"
+            />
+          }
+          content={
+            <FormattedMessage
+              id="homepage.closed.content"
+              defaultMessage="The game is now closed! Go and enjoy the party!"
+            />
+          }
         />
         <Container
           sx={{
@@ -93,7 +114,10 @@ export const BettingGameContainer = ({
           }}
         >
           <Typography>
-            The host of the today's game has now ended the wedding betting game.
+            <FormattedMessage
+              id="homepage.closed.description"
+              defaultMessage="The host of today's game has now ended the wedding betting game."
+            />
           </Typography>
         </Container>
       </div>
@@ -126,10 +150,10 @@ export const BettingGameContainer = ({
           fontSize="24px"
           sx={{ py: theme.space.space7 }}
         >
-          Thank you for participating.
-          <br />
-          Your answer has been successfully registered. <br />
-          Enjoy the rest of the day!
+          <FormattedMessage
+            id="homepage.success.message"
+            defaultMessage="Thank you for participating. Your answer has been successfully registered. Enjoy the rest of the day!"
+          />
         </Typography>
       ) : (
         <Form>

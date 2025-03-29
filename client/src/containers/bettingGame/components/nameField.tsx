@@ -1,4 +1,5 @@
 import { Container, TextField, Typography } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useCallback, useEffect, useState } from 'react';
 import theme from '../../../theme';
 
@@ -15,6 +16,7 @@ export const NameField = ({
   onNameChange,
   formError,
 }: NameFieldProps) => {
+  const intl = useIntl();
   const [validationErrors, setValidationErrors] = useState<{
     firstName?: string;
     lastName?: string;
@@ -24,28 +26,38 @@ export const NameField = ({
     if (formError) {
       setValidationErrors({
         ...(firstName.length === 0
-          ? { firstName: 'This is a required field' }
+          ? {
+              firstName: intl.formatMessage({
+                id: 'homepage.namefield.error.required',
+              }),
+            }
           : {}),
         ...(lastName.length === 0
-          ? { lastName: 'This is a required field' }
+          ? {
+              lastName: intl.formatMessage({
+                id: 'homepage.namefield.error.required',
+              }),
+            }
           : {}),
       });
       return;
     }
 
     setValidationErrors({});
-  }, [formError, firstName, lastName]);
+  }, [formError, firstName, lastName, intl]);
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>): void => {
       if (event.target.value.length === 0) {
         setValidationErrors({
           ...validationErrors,
-          [event.target.name]: `This is a required field`,
+          [event.target.name]: intl.formatMessage({
+            id: 'homepage.namefield.error.required',
+          }),
         });
       }
     },
-    [validationErrors]
+    [validationErrors, intl]
   );
 
   const handleFocus = useCallback(
@@ -76,12 +88,18 @@ export const NameField = ({
           fontSize: theme.space.space5,
         }}
       >
-        Please provide your name
+        <FormattedMessage
+          id="homepage.namefield.title"
+          defaultMessage="Please provide your name"
+        />
       </Typography>
 
       <TextField
         sx={{ width: '100%' }}
-        label="First Name"
+        label={intl.formatMessage({
+          id: 'homepage.namefield.label.firstName',
+          defaultMessage: 'First Name',
+        })}
         name="firstName"
         variant="filled"
         value={firstName}
@@ -95,7 +113,10 @@ export const NameField = ({
 
       <TextField
         sx={{ width: '100%' }}
-        label="Last Name"
+        label={intl.formatMessage({
+          id: 'homepage.namefield.label.lastName',
+          defaultMessage: 'Last Name',
+        })}
         name="lastName"
         variant="filled"
         value={lastName}

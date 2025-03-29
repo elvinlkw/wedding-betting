@@ -4,6 +4,7 @@ import {
   FeaturesPage,
   LeaderboardPage,
   LoginPage,
+  SettingsPage,
   UserAnswers,
 } from './pages';
 import { Outlet, Route, Routes, useNavigate } from 'react-router';
@@ -74,6 +75,7 @@ function App() {
             <Route index element={<BettingGamePage />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
           <Route path="language-selection" element={<LanguageSelection />} />
 

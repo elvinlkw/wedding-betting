@@ -8,6 +8,7 @@ import GamesIcon from '@mui/icons-material/Games';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import LoginIcon from '@mui/icons-material/Login';
 import Paper from '@mui/material/Paper';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag.hooks';
 
 const navigationLinks = [
@@ -22,9 +23,9 @@ const navigationLinks = [
     icon: <LeaderboardIcon />,
   },
   {
-    path: '/language-selection',
-    label: <FormattedMessage id="navbar.title.language" />,
-    icon: <LeaderboardIcon />,
+    path: '/settings',
+    label: <FormattedMessage id="navbar.title.settings" />,
+    icon: <SettingsIcon />,
   },
 ];
 
