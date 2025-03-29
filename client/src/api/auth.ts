@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import apiClient from './interceptors';
 
 export type LoginRequest = {
   username: string;
@@ -14,7 +14,7 @@ export type LoginResponse = {
 };
 
 export const login = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await axios.post('/api/auth', data);
+  const response = await apiClient.post('/api/auth', data);
   return response.data;
 };
 
@@ -30,7 +30,7 @@ export const getUser = async () => {
       'x-auth-token': Cookies.get('jwttoken'),
     },
   };
-  const response = await axios.get('/api/auth', config);
+  const response = await apiClient.get('/api/auth', config);
   return response.data;
 };
 
