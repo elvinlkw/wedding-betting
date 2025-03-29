@@ -23,21 +23,21 @@
 
 ## French Questions
 
-- Nombre d'étages du gâteau de mariage ?
+- Nombre d'étages du gâteau de mariage?
   - Moins de 2 | Plus de 2
-- Durée de la première danse ?
+- Durée de la première danse?
   - Moins de 3 minutes | Plus de 3 minutes
 - La première danse sera-t-elle sur une chanson d'Ed Sheeran ?
   - Oui | Non
-- Quand aura lieu la première danse ?
+- Quand aura lieu la première danse?
   - Avant le dîner | Après le dîner
-- Mary lancera-t-elle son bouquet ?
+- Mary lancera-t-elle son bouquet?
   - Oui | Non
-- Mary portera-t-elle une robe de soirée sur la piste de danse ?
+- Mary portera-t-elle une robe de soirée sur la piste de danse?
   - Oui | Non
-- Durée du discours du garçon d'honneur ?
+- Durée du discours du garçon d'honneur?
   - Moins de 4 minutes | Plus de 4 minutes
-- Durée du discours de la demoiselle d'honneur ?
+- Durée du discours de la demoiselle d'honneur?
   - Moins de 4 minutes | Plus de 4 minutes
-- Combien de personnes pleureront en faisant leurs toasts ?
+- Combien de personnes pleureront en faisant leurs toasts?
   - Moins de 2 | Plus de 2
