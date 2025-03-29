@@ -2,10 +2,35 @@ import { Request, Response } from 'express';
 import camelcaseKeys from 'camelcase-keys';
 import pool from '../db';
 import { choicesRepository, questionsRepository } from '../repository';
-import { ErrorType } from '../types';
+import { ErrorType, LanguageType } from '../types';
+import { QuestionWithChoicesResponse } from '../repository/questions.repository';
+
+const getQuestionText = <T extends Partial<QuestionWithChoicesResponse>>(
+  row: T,
+  language: LanguageType
+) => {
+  const questionText =
+    language === 'fr' ? row.question_text_fr : row.question_text;
+  row.question_text = questionText;
+  delete row.question_text_fr;
+
+  if (row.choices) {
+    row.choices = row.choices.map((ch) => {
+      const choiceText = language === 'fr' ? ch.choice_text_fr : ch.choice_text;
+      ch.choice_text = choiceText;
+      // @ts-ignore: Disable TypeScript error on the next line
+      delete ch.choice_text_fr;
+
+      return ch;
+    });
+  }
+
+  return camelcaseKeys(row, { deep: true });
+};
 
 export const getAllQuestions = async (req: Request, res: Response) => {
   try {
+    const language = (req.headers['accept-language'] || 'en') as LanguageType;
     const includeChoices = req.query.includeChoices === 'true';
     const includeRevealed = req.query.includeRevealed === 'true';
 
@@ -14,7 +39,7 @@ export const getAllQuestions = async (req: Request, res: Response) => {
       : await questionsRepository.findAll();
     const response = {
       count: allQuestions.rowCount,
-      data: allQuestions.rows.map((row) => camelcaseKeys(row, { deep: true })),
+      data: allQuestions.rows.map((row: any) => getQuestionText(row, language)),
     };
     res.json(response);
   } catch (err) {
@@ -91,7 +116,8 @@ export const patch = async (req: Request, res: Response) => {
       return;
     }
 
-    const { questionText, isEnabled, isAnswerRevealed } = req.body;
+    const { questionText, isEnabled, isAnswerRevealed, questionTextFr } =
+      req.body;
 
     const fieldsToUpdate = [];
     const values = [];
@@ -100,6 +126,11 @@ export const patch = async (req: Request, res: Response) => {
     if (questionText !== undefined) {
       fieldsToUpdate.push('question_text = $' + (fieldsToUpdate.length + 1));
       values.push(questionText);
+    }
+
+    if (questionTextFr !== undefined) {
+      fieldsToUpdate.push('question_text_fr = $' + (fieldsToUpdate.length + 1));
+      values.push(questionTextFr);
     }
 
     if (isEnabled !== undefined) {
@@ -201,7 +232,6 @@ export const createChoice = async (req: Request, res: Response) => {
       return;
     }
 
-    // TODO: improve this
     const allChoices = await choicesRepository.findById(questionId);
     if (allChoices.rowCount) {
       await choicesRepository.removeAll(questionId);
@@ -213,6 +243,7 @@ export const createChoice = async (req: Request, res: Response) => {
       (choice: {
         choiceId?: number;
         choiceText: string;
+        choiceTextFr: string;
         isRightAnswer: boolean;
       }) => {
         return choicesRepository.insert(questionId, choice);
@@ -240,6 +271,7 @@ type ChoiceUpdateParams = {
 type ChoiceUpdateBody = {
   choiceId?: number;
   choiceText: string;
+  choiceTextFr: string;
   isRightAnswer: boolean;
 };
 

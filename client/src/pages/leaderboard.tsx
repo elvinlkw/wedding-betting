@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 import { Header } from '../components';
 import { useLeaderboard } from '../api/hooks/useLeaderboard';
 
@@ -39,14 +40,32 @@ export const LeaderboardPage = () => {
           height: '100vh',
         }}
       >
-        <Typography color="error">Failed to load leaderboard data.</Typography>
+        <Typography color="error">
+          <FormattedMessage
+            id="leaderboard.error"
+            defaultMessage="Failed to load leaderboard data."
+          />
+        </Typography>
       </Container>
     );
   }
 
   return (
     <>
-      <Header title="Leaderboard" content="Check who's leading the charge!!" />
+      <Header
+        title={
+          <FormattedMessage
+            id="leaderboard.header.title"
+            defaultMessage="Leaderboard"
+          />
+        }
+        content={
+          <FormattedMessage
+            id="leaderboard.header.subtitle"
+            defaultMessage="Check who's leading the charge!!"
+          />
+        }
+      />
       <List>
         {!data || data.userScoreboard.length === 0 ? (
           <Container
@@ -56,8 +75,10 @@ export const LeaderboardPage = () => {
             }}
           >
             <Typography>
-              No leaderboard information available yet. Check back at a later
-              time.
+              <FormattedMessage
+                id="leaderboard.noData"
+                defaultMessage="No leaderboard information available yet. Check back at a later time."
+              />
             </Typography>
           </Container>
         ) : (

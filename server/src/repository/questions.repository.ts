@@ -4,6 +4,7 @@ import pool from '../db';
 export type QuestionModel = {
   question_id: number;
   question_text: string;
+  question_text_fr: string;
   is_enabled: true;
   is_answer_revealed: boolean;
 };
@@ -13,6 +14,7 @@ export type ChoicesModel = {
   question_id: number;
   is_right_answer: boolean;
   choice_text: string;
+  choice_text_fr: string;
 };
 
 export const findAll = (): Promise<QueryResult<QuestionModel[]>> => {
@@ -27,7 +29,7 @@ export const findAllRevealed = () => {
   return pool.query(`SELECT * FROM questions WHERE is_answer_revealed = TRUE;`);
 };
 
-type QuestionWithChoicesResponse = {
+export type QuestionWithChoicesResponse = {
   choices: ChoicesModel[];
 } & QuestionModel;
 
@@ -43,12 +45,14 @@ export const findAllWithChoices = ({
   return pool.query(`SELECT 
     q.question_id,
     q.question_text,
+    q.question_text_fr,
     q.is_answer_revealed,
     CASE 
       WHEN COUNT(qc.choice_id) = 0 THEN '[]'::json
       ELSE json_agg(
         json_build_object(
           'choice_id', qc.choice_id, 
+          'choice_text_fr', qc.choice_text_fr,
           'choice_text', qc.choice_text
           ${isAdmin ? ", 'is_right_answer', qc.is_right_answer" : ''}
         )
@@ -63,31 +67,33 @@ export const findAllWithChoices = ({
 
 type QuestionBody = {
   text: QuestionModel['question_text'];
+  textFr: QuestionModel['question_text_fr'];
   isActive?: QuestionModel['is_enabled'];
 };
 
-export const insert = ({ text, isActive = true }: QuestionBody) => {
+export const insert = ({ text, textFr, isActive = true }: QuestionBody) => {
   return pool.query(
     `INSERT INTO questions (
-    question_text, is_enabled
+    question_text, question_text_fr, is_enabled
   ) VALUES (
-    $1, $2
+    $1, $2, $3
   ) RETURNING *`,
-    [text, isActive]
+    [text, textFr, isActive]
   );
 };
 
 export const update = (
   questionId: string,
-  { text, isActive = true }: QuestionBody
+  { text, textFr, isActive = true }: QuestionBody
 ) => {
   return pool.query(
     `UPDATE questions
     SET question_text = $1,
-        is_enabled = $2
-    WHERE question_id = $3
+        question_text_fr = $2,
+        is_enabled = $3
+    WHERE question_id = $4
     RETURNING *`,
-    [text, isActive, questionId]
+    [text, textFr, isActive, questionId]
   );
 };
 

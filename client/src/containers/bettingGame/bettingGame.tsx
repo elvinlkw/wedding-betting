@@ -1,5 +1,6 @@
 import { Chip, Container, Stack, Typography } from '@mui/material';
 import { FEATURE_PLAY_GAME } from '../../features';
+import { FormattedMessage } from 'react-intl';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
@@ -103,11 +104,20 @@ export const BettingGameContainer = ({
     <div>
       <Header
         title={
-          <>
-            Elvin & Mary's <br /> Wedding Betting
-          </>
+          <FormattedMessage
+            id="homepage.header.title"
+            defaultMessage={`Elvin & Mary's {lineBreak} Wedding Betting`}
+            values={{
+              lineBreak: <br />,
+            }}
+          />
         }
-        content="Happy Guessing! Good luck!"
+        content={
+          <FormattedMessage
+            id="homepage.header.subtitle"
+            defaultMessage="Happy Guessing! Good luck!"
+          />
+        }
       />
 
       {isSubmitSuccessful ? (
@@ -133,7 +143,7 @@ export const BettingGameContainer = ({
                 justifyContent: 'center',
               }}
             >
-              {gameQuestions.map((qu, idx) => {
+              {gameQuestions.map((_, idx) => {
                 const hasChoice =
                   formValues.answers[idx].choiceId !== null
                     ? 'primary'
@@ -156,6 +166,7 @@ export const BettingGameContainer = ({
                     label={idx + 1}
                     color={hasChoice}
                     variant="filled"
+                    key={`paginate-${idx}`}
                   />
                 );
               })}

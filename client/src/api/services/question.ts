@@ -10,12 +10,14 @@ import axios from 'axios';
 export type Choice = {
   choiceId: number;
   choiceText: string;
+  choiceTextFr: string;
   isRightAnswer: boolean;
 };
 
 export type Question = {
   questionId: number;
   questionText: string;
+  questionTextFr: string;
   choices: Choice[];
   isAnswerRevealed: boolean;
 };
@@ -37,7 +39,10 @@ export const useQuestions = (): UseQueryResult<Question[]> => {
   });
 };
 
-const createQuestion = async (text: string): Promise<Question> => {
+const createQuestion = async (
+  text: string,
+  textFr: string
+): Promise<Question> => {
   const config = {
     headers: {
       'x-auth-token': Cookies.get('jwttoken'),
@@ -47,6 +52,7 @@ const createQuestion = async (text: string): Promise<Question> => {
     '/api/questions',
     {
       text,
+      textFr,
       isActive: true,
     },
     config
@@ -77,12 +83,14 @@ export const useCreateQuestion = () => {
   return useMutation({
     mutationFn: async ({
       questionText,
+      questionTextFr,
       choices,
     }: {
       questionText: string;
+      questionTextFr: string;
       choices: Omit<Choice, 'choiceId'>[];
     }) => {
-      const question = await createQuestion(questionText);
+      const question = await createQuestion(questionText, questionTextFr);
       if (!choices.length) {
         return {
           ...question,
@@ -115,7 +123,8 @@ export const useCreateQuestion = () => {
 
 const updateQuestion = async (
   questionId: number,
-  text: string
+  text: string,
+  textFr: string
 ): Promise<Question> => {
   const config = {
     headers: {
@@ -126,6 +135,7 @@ const updateQuestion = async (
     `/api/questions/${questionId}`,
     {
       text,
+      textFr,
       isActive: true,
     },
     config
@@ -157,17 +167,24 @@ export const useUpdateQuestion = () => {
     mutationFn: async ({
       questionId,
       questionText,
+      questionTextFr,
       choices,
     }: {
       questionId: number;
       questionText: string;
+      questionTextFr: string;
       choices: {
         choiceId?: Choice['choiceId'];
         choiceText: Choice['choiceText'];
+        choiceTextFr: Choice['choiceTextFr'];
         isRightAnswer: Choice['isRightAnswer'];
       }[];
     }) => {
-      const question = await updateQuestion(questionId, questionText);
+      const question = await updateQuestion(
+        questionId,
+        questionText,
+        questionTextFr
+      );
       if (!choices.length) {
         return {
           ...question,
@@ -225,7 +242,7 @@ export const useDeleteQuestion = () => {
 
 const patchQuestion = async (
   questionId: number,
-  { questionText, isAnswerRevealed }: Partial<Question>
+  { questionText, questionTextFr, isAnswerRevealed }: Partial<Question>
 ): Promise<Question> => {
   const config = {
     headers: {
@@ -240,6 +257,10 @@ const patchQuestion = async (
 
   if (questionText) {
     body.questionText = questionText;
+  }
+
+  if (questionTextFr) {
+    body.questionTextFr = questionTextFr;
   }
 
   const response = await axios.patch(

@@ -1,0 +1,14 @@
+{
+  "homepage.header.title": "Le jeu de marriage de {lineBreak} Elvin & Mary",
+  "homepage.header.subtitle": "Essayez de deviner les réponses. Bonne chance à tous et à toutes",
+  "leaderboard.header.title": "Classement",
+  "leaderboard.header.subtitle": "Regardez qui mène la charge!!",
+  "leaderboard.error": "Échec du chargement des données du classement.",
+  "leaderboard.noData": "Aucune information sur le classement n'est encore disponible. Revenez plus tard.",
+  "cta.next": "Prochain",
+  "cta.submit": "Soumettre",
+  "cta.previous": "retour",
+  "navbar.title.game": "Jeu",
+  "navbar.title.language": "Langue",
+  "navbar.title.leaderboard": "Classement"
+}
