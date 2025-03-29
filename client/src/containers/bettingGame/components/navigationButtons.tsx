@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import { FormattedMessage } from 'react-intl';
 import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -72,7 +73,7 @@ export const NavigationButton = ({
         >
           {currentPage > 0 && (
             <Button variant="outlined" onClick={onPreviousClick}>
-              Previous
+              <FormattedMessage id="cta.previous" defaultMessage="Previous" />
             </Button>
           )}
           <Button
@@ -80,7 +81,11 @@ export const NavigationButton = ({
             onClick={currentPage === totalCount ? onSubmit : onNextClick}
             disabled={status.pending}
           >
-            {currentPage === totalCount ? 'Submit' : 'Next'}
+            {currentPage === totalCount ? (
+              <FormattedMessage id="cta.submit" defaultMessage="Submit" />
+            ) : (
+              <FormattedMessage id="cta.next" defaultMessage="Next" />
+            )}
           </Button>
         </Stack>
       </Container>
