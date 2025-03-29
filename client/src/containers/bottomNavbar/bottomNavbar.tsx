@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { FEATURE_SHOW_LOGIN_ICON_NAVBAR } from '../../features';
+import { FormattedMessage } from 'react-intl';
 import GamesIcon from '@mui/icons-material/Games';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import LoginIcon from '@mui/icons-material/Login';
@@ -10,8 +11,21 @@ import Paper from '@mui/material/Paper';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag.hooks';
 
 const navigationLinks = [
-  { path: '/', label: 'Game', icon: <GamesIcon /> },
-  { path: '/leaderboard', label: 'Leaderboard', icon: <LeaderboardIcon /> },
+  {
+    path: '/',
+    label: <FormattedMessage id="navbar.title.game" />,
+    icon: <GamesIcon />,
+  },
+  {
+    path: '/leaderboard',
+    label: <FormattedMessage id="navbar.title.leaderboard" />,
+    icon: <LeaderboardIcon />,
+  },
+  {
+    path: '/language-selection',
+    label: <FormattedMessage id="navbar.title.language" />,
+    icon: <LeaderboardIcon />,
+  },
 ];
 
 export const BottomNavbar = () => {

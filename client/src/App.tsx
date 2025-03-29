@@ -19,12 +19,11 @@ import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
 import { Spinner } from './components';
 
+import enMessages from './i18n/locales/en.json';
 import frMessages from './i18n/locales/fr.json';
 import { useFeatureStore } from './store/featureStore';
 import { useFeatures } from './api';
 import { useLanguageStore } from './store/languageStore';
-
-// import enMessages from './i18n/locales/en.json';
 
 function App() {
   const { setFeatures } = useFeatureStore();
@@ -55,12 +54,10 @@ function App() {
     return <Spinner />;
   }
 
-  console.log(language);
-
   return (
     <IntlProvider
       locale={language}
-      messages={language === 'fr' ? frMessages : undefined}
+      messages={language === 'fr' ? frMessages : enMessages}
       defaultLocale="fr"
     >
       <AuthContext.Provider value={{ authUser, setAuthUser }}>

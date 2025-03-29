@@ -107,7 +107,6 @@ export const BettingGameContainer = ({
           <FormattedMessage
             id="homepage.header.title"
             defaultMessage={`Elvin & Mary's {lineBreak} Wedding Betting`}
-            description="Main page title"
             values={{
               lineBreak: <br />,
             }}
@@ -117,7 +116,6 @@ export const BettingGameContainer = ({
           <FormattedMessage
             id="homepage.header.subtitle"
             defaultMessage="Happy Guessing! Good luck!"
-            description="Subtitle of the page header"
           />
         }
       />

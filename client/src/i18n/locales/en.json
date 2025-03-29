@@ -1,4 +1,14 @@
 {
-  "homepage.header.title": "The Wedding",
-  "homepage.header.subtitle": "Our guessing game. Good luck to everyone!"
+  "homepage.header.title": "Elvin & Mary's {lineBreak} Wedding Betting",
+  "homepage.header.subtitle": "Happy Guessing! Good luck!",
+  "leaderboard.header.title": "Leaderboard",
+  "leaderboard.header.subtitle": "Check who's leading the charge!!",
+  "leaderboard.error": "Failed to load leaderboard data.",
+  "leaderboard.noData": "No leaderboard information available yet. Check back at a later time.",
+  "cta.next": "Next",
+  "cta.previous": "Previous",
+  "cta.submit": "Submit",
+  "navbar.title.game": "Game",
+  "navbar.title.language": "Language",
+  "navbar.title.leaderboard": "Leaderboard"
 }
