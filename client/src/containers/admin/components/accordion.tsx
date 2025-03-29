@@ -1,5 +1,6 @@
 import {
   FEATURE_DELETE_QUESTION,
+  FEATURE_PLAY_GAME,
   FEATURE_UPDATE_QUESTION,
 } from '../../../features';
 import {
@@ -24,7 +25,9 @@ import Stack from '@mui/material/Stack';
 import { Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useFeatureFlag } from '../../../hooks/useFeatureFlag.hooks';
+import { useFeatureStore } from '../../../store/featureStore';
 import { useState } from 'react';
+import { useToggleFeature } from '../../../api/hooks/useFeatures';
 
 export const Accordion = ({
   data,
@@ -44,9 +47,13 @@ export const Accordion = ({
 
   const { mutateAsync: deleteQuestion } = useDeleteQuestion();
   const { mutateAsync: patchQuestion } = usePatchQuestion();
+  const { mutateAsync: toggleFeature } = useToggleFeature();
 
   const isDeleteQuestionEnabled = useFeatureFlag(FEATURE_DELETE_QUESTION);
   const isUpdateQuestionEnabled = useFeatureFlag(FEATURE_UPDATE_QUESTION);
+  const { featuresMap } = useFeatureStore();
+
+  const playGameFeatureFlag = featuresMap.get(FEATURE_PLAY_GAME);
 
   const handleDelete = async () => {
     if (!questionToDelete) {
@@ -63,6 +70,13 @@ export const Accordion = ({
 
   const handleReveal = async () => {
     if (!showReveal) return;
+
+    if (playGameFeatureFlag?.isEnabled) {
+      toggleFeature({
+        featureId: playGameFeatureFlag?.featureId,
+        isEnabled: false,
+      });
+    }
 
     await patchQuestion({
       questionId: showReveal.questionId,

@@ -1,12 +1,14 @@
+import { Container, Typography } from '@mui/material';
+import { FEATURE_PLAY_GAME } from '../../features';
 import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
 import { NavigationButton } from './components/navigationButtons';
 import { QuestionItem } from './components/questionItem';
-import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import theme from '../../theme';
 import { useCreateUserAnswer } from '../../api/hooks/useUserAnswers';
+import { useFeatureFlag } from '../../hooks';
 import { useState } from 'react';
 
 const Form = styled.form({
@@ -43,6 +45,8 @@ export const BettingGameContainer = ({
     })),
   });
 
+  const canPlayGame = useFeatureFlag(FEATURE_PLAY_GAME);
+
   const { mutateAsync: createUserAnswer } = useCreateUserAnswer();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +77,27 @@ export const BettingGameContainer = ({
       console.error(err);
     }
   };
+
+  if (!canPlayGame) {
+    return (
+      <div>
+        <Header
+          title="Sorry"
+          content="The game is now closed! Go and enjoy the party!"
+        />
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography>
+            The host of the today's game has now ended the wedding betting game.
+          </Typography>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div>

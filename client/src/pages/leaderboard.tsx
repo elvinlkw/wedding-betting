@@ -44,50 +44,47 @@ export const LeaderboardPage = () => {
     );
   }
 
-  if (!data || data.userScoreboard.length === 0) {
-    return (
-      <Container
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <Typography>
-          No leaderboard data available yet. Check back at a later time.
-        </Typography>
-      </Container>
-    );
-  }
-
   return (
     <>
       <Header title="Leaderboard" content="Check who's leading the charge!!" />
       <List>
-        {data.userScoreboard.map((user, index) => (
-          <ListItem
-            key={user.userId}
+        {!data || data.userScoreboard.length === 0 ? (
+          <Container
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: 2,
-              borderBottom:
-                index !== data.userScoreboard.length - 1
-                  ? '1px solid #e0e0e0'
-                  : 'none',
-              pb: 1,
+              justifyContent: 'center',
             }}
           >
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: index === 0 ? 'gold' : 'primary.main' }}>
-                {index + 1}
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={`${user.firstName} ${user.lastName}`} />
-          </ListItem>
-        ))}
+            <Typography>
+              No leaderboard information available yet. Check back at a later
+              time.
+            </Typography>
+          </Container>
+        ) : (
+          data.userScoreboard.map((user, index) => (
+            <ListItem
+              key={user.userId}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 2,
+                borderBottom:
+                  index !== data.userScoreboard.length - 1
+                    ? '1px solid #e0e0e0'
+                    : 'none',
+                pb: 1,
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: index === 0 ? 'gold' : 'primary.main' }}>
+                  {index + 1}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={`${user.firstName} ${user.lastName}`} />
+            </ListItem>
+          ))
+        )}
       </List>
     </>
   );
