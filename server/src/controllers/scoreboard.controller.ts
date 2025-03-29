@@ -60,7 +60,7 @@ export const getScoreboard = async (
       INNER JOIN users u ON ua.user_id = u.user_id
       WHERE ua.question_id = ANY($1)
       GROUP BY ua.user_id, u.first_name, u.last_name
-      ORDER BY percent_correct DESC`,
+      ORDER BY correct_answers DESC`,
       [revealedQuestionIds]
     );
 
