@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import camelcaseKeys from 'camelcase-keys';
 import pool from '../db';
 import { UserModel } from '../repository/users.repository';
 import { ErrorType } from '../types';
@@ -66,7 +67,9 @@ export const getScoreboard = async (
     const response = {
       totalQuestions: totalQuestionsCount,
       questionsRevealed: revealedQuestionIds.length,
-      userScoreboard: userAnswersWithCorrectness.rows as Array<UserScoreboard>,
+      userScoreboard: camelcaseKeys(userAnswersWithCorrectness.rows, {
+        deep: true,
+      }) as Array<UserScoreboard>,
     };
 
     res.json(response);
