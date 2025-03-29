@@ -5,7 +5,8 @@
   "main": "server.mjs",
   "scripts": {
     "dev": "tsx watch server.ts",
-    "start": "tsx server.ts"
+    "start": "tsx server.ts",
+    "build": "tsc"
   },
   "author": "Elvin Li",
   "license": "MIT",
