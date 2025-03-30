@@ -1,6 +1,6 @@
+import { Header, Spinner } from '../components';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Spinner } from '../components';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -49,6 +49,7 @@ export const UserAnswers = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <Header title="User Answers" />
       <Paper sx={{ width: '100%', mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">

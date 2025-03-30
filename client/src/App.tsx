@@ -9,13 +9,12 @@ import {
 } from './pages';
 import { Outlet, Route, Routes, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
+import { AdminBottomNavbar } from './containers/adminBottomNavbar';
 import { AuthContext } from './context';
 import { type AuthUser } from './types/auth';
-
 import { BottomNavbar } from './containers/bottomNavbar/bottomNavbar';
 import { IntlProvider } from 'react-intl';
 import { LanguageSelection } from './pages/languageSelection';
-import { Navbar } from './containers';
 import { PATHS } from './routing';
 import { ProtectedRoute } from './routing';
 import { Spinner } from './components';
@@ -84,8 +83,8 @@ function App() {
             path={PATHS.ADMIN_PAGE}
             element={
               <>
-                <Navbar />
                 <Outlet />
+                <AdminBottomNavbar />
               </>
             }
           >

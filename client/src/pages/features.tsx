@@ -5,6 +5,7 @@ import { useFeatureStore } from '../store/featureStore';
 import { useMemo } from 'react';
 import { useQuestions } from '../api/services/question';
 import { useToggleFeature } from '../api/hooks/useFeatures';
+import { Header } from '../components';
 
 export const FeaturesPage = () => {
   const { features } = useFeatureStore();
@@ -29,33 +30,36 @@ export const FeaturesPage = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h4" align="center">
-        List of Features
-      </Typography>
-      {features.map((feature) => (
-        <Box
-          key={feature.featureId}
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '175px 1fr',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '16px',
-            width: {
-              lg: '900px',
-              md: '100%',
-              sm: '100%',
-            },
-          }}
-        >
-          <Typography variant="body1">{feature.featureName}</Typography>
-          <Switch
-            checked={feature.isEnabled}
-            onClick={() => handleFeatureToggle(feature)}
-          />
-        </Box>
-      ))}
-    </Container>
+    <>
+      <Header title="Features" />
+      <Container>
+        <Typography variant="h4" align="center">
+          List of Features
+        </Typography>
+        {features.map((feature) => (
+          <Box
+            key={feature.featureId}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '175px 1fr',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
+              width: {
+                lg: '900px',
+                md: '100%',
+                sm: '100%',
+              },
+            }}
+          >
+            <Typography variant="body1">{feature.featureName}</Typography>
+            <Switch
+              checked={feature.isEnabled}
+              onClick={() => handleFeatureToggle(feature)}
+            />
+          </Box>
+        ))}
+      </Container>
+    </>
   );
 };

@@ -1,6 +1,7 @@
 import { Accordion } from './components/accordion';
 import { ActionBar } from './components/actionBar';
 import Container from '@mui/material/Container';
+import { Header } from '../../components';
 import { Modal } from './components/modal';
 import { Question } from '../../api/services/question';
 import Typography from '@mui/material/Typography';
@@ -33,7 +34,8 @@ export const AdminContainer = ({ data }: AdminContainerProps) => {
 
   return (
     <>
-      <Container maxWidth="xl">
+      <Header title="Admin Questions" />
+      <Container maxWidth="xl" sx={{ pt: 4, pb: 10 }}>
         <Typography component="h2" fontSize={24} align="center">
           List of Questions
         </Typography>
