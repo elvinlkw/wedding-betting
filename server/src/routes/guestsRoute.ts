@@ -6,4 +6,10 @@ const router = express.Router();
 
 router.get('/', guestsController.getGuests);
 
+router.post('/', auth, guestsController.createGuest);
+
+router.put('/:id', auth, guestsController.updateGuest);
+
+router.delete('/:id', auth, guestsController.deleteGuest);
+
 export default router;
