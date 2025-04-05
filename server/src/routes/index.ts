@@ -4,6 +4,7 @@ import adminUserRoute from './adminUsersRoute';
 import authRoute from './authRoute';
 import scoreboardRoute from './scoreboard.route';
 import featuresRoute from './features.route';
+import guestsRoute from './guestsRoute';
 
 export {
   questionsRoute,
@@ -12,4 +13,5 @@ export {
   authRoute,
   scoreboardRoute,
   featuresRoute,
+  guestsRoute,
 };
