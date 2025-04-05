@@ -38,7 +38,7 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-const MAXIMUM_TABLE_NUMBER = 16;
+const MAXIMUM_TABLE_NUMBER = 17;
 
 const DEFAULT_GUEST = {
   firstName: '',
