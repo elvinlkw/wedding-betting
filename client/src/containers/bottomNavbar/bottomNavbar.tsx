@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { FEATURE_SHOW_LOGIN_ICON_NAVBAR } from '../../features';
+import {
+  FEATURE_SHOW_LOGIN_ICON_NAVBAR,
+  FEATURE_SHOW_SEARING_CHART,
+} from '../../features';
 import { FormattedMessage } from 'react-intl';
 import GamesIcon from '@mui/icons-material/Games';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -24,11 +27,6 @@ const navigationLinks = [
     icon: <LeaderboardIcon />,
   },
   {
-    path: '/seating-chart',
-    label: <FormattedMessage id="navbar.title.seating" />,
-    icon: <FlatwareIcon />,
-  },
-  {
     path: '/settings',
     label: <FormattedMessage id="navbar.title.settings" />,
     icon: <SettingsIcon />,
@@ -41,10 +39,20 @@ export const BottomNavbar = () => {
   const location = useLocation();
 
   const showLoginIcon = useFeatureFlag(FEATURE_SHOW_LOGIN_ICON_NAVBAR);
+  const showSeatingChart = useFeatureFlag(FEATURE_SHOW_SEARING_CHART);
 
   const navlinks = useMemo(() => {
     return [
       ...navigationLinks,
+      ...(showSeatingChart
+        ? [
+            {
+              path: '/seating-chart',
+              label: <FormattedMessage id="navbar.title.seating" />,
+              icon: <FlatwareIcon />,
+            },
+          ]
+        : []),
       ...(showLoginIcon
         ? [
             {
@@ -55,7 +63,7 @@ export const BottomNavbar = () => {
           ]
         : []),
     ];
-  }, [showLoginIcon]);
+  }, [showLoginIcon, showSeatingChart]);
 
   useEffect(() => {
     const currentIndex = navlinks.findIndex((link) => {
