@@ -20,10 +20,15 @@
   "settings.language.label": "Language",
   "settings.language.option.english": "English",
   "settings.language.option.french": "French",
+  "seating.header.title": "Seating Chart",
+  "seating.header.subtitle": "Here is the seating chart for the wedding",
+  "seating.search.label": "Search guests",
+  "seating.no.results": "No guests found",
   "cta.next": "Next",
   "cta.previous": "Previous",
   "cta.submit": "Submit",
   "navbar.title.game": "Game",
   "navbar.title.settings": "Settings",
+  "navbar.title.seating": "Seat Chart",
   "navbar.title.leaderboard": "Leaderboard"
 }

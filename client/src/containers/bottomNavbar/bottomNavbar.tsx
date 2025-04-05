@@ -10,6 +10,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import Paper from '@mui/material/Paper';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag.hooks';
+import FlatwareIcon from '@mui/icons-material/Flatware';
 
 const navigationLinks = [
   {
@@ -21,6 +22,11 @@ const navigationLinks = [
     path: '/leaderboard',
     label: <FormattedMessage id="navbar.title.leaderboard" />,
     icon: <LeaderboardIcon />,
+  },
+  {
+    path: '/seating-chart',
+    label: <FormattedMessage id="navbar.title.seating" />,
+    icon: <FlatwareIcon />,
   },
   {
     path: '/settings',
@@ -52,9 +58,10 @@ export const BottomNavbar = () => {
   }, [showLoginIcon]);
 
   useEffect(() => {
-    const currentIndex = navlinks.findIndex(
-      (link) => link.path === location.pathname
-    );
+    const currentIndex = navlinks.findIndex((link) => {
+      const [, mainPath] = location.pathname.split('/');
+      return link.path === `/${mainPath}`;
+    });
     setValue(currentIndex !== -1 ? currentIndex : 0);
   }, [location, navlinks]);
 

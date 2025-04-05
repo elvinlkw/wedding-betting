@@ -5,6 +5,8 @@ import {
   FeaturesPage,
   LeaderboardPage,
   LoginPage,
+  SeatingChartPage,
+  SeatingChartTablePage,
   SettingsPage,
   UserAnswers,
 } from './pages';
@@ -25,9 +27,12 @@ import frMessages from './i18n/locales/fr.json';
 import { useFeatureStore } from './store/featureStore';
 import { useFeatures } from './api';
 import { useLanguageStore } from './store/languageStore';
+import { useSeatingStore } from './store/seatingStore';
+import { useGuest } from './api/hooks/useGuests';
 
 function App() {
   const { setFeatures } = useFeatureStore();
+  const { setGuests } = useSeatingStore();
   const { language, setLanguage } = useLanguageStore();
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
@@ -35,6 +40,7 @@ function App() {
   const gameLanguage = localStorage.getItem('gameLanguage') as 'en' | 'fr';
 
   const { data: featuresData, isLoading } = useFeatures();
+  const { data: guestsData } = useGuest();
 
   useEffect(() => {
     if (!gameLanguage) {
@@ -50,6 +56,12 @@ function App() {
       setFeatures(featuresData);
     }
   }, [featuresData, setFeatures]);
+
+  useEffect(() => {
+    if (guestsData) {
+      setGuests(guestsData);
+    }
+  }, [guestsData, setGuests]);
 
   if (isLoading) {
     return <Spinner />;
@@ -74,6 +86,11 @@ function App() {
           >
             <Route index element={<BettingGamePage />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
+            <Route path="seating-chart" element={<SeatingChartPage />} />
+            <Route
+              path="seating-chart/:tableId"
+              element={<SeatingChartTablePage />}
+            />
             <Route path="login" element={<LoginPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

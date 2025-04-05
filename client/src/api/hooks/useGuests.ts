@@ -11,6 +11,13 @@ export const useGuest = () =>
     queryFn: guestsService.getAllGuests,
   });
 
+export const useGuestByTable = (tableNumber: number) => {
+  return useQuery<GuestResponse>({
+    queryKey: ['guests', tableNumber],
+    queryFn: () => guestsService.getGuestsByTable(tableNumber),
+  });
+};
+
 export const useCreateGuest = () => {
   const queryClient = useQueryClient();
 

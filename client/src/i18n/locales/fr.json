@@ -20,10 +20,15 @@
   "settings.language.label": "Langue",
   "settings.language.option.english": "Anglais",
   "settings.language.option.french": "Français",
+  "seating.header.title": "Plan de table",
+  "seating.header.subtitle": "Voici le plan de table pour le mariage",
+  "seating.search.label": "Rechercher des invités",
+  "seating.no.results": "Aucun invité trouvé",
   "cta.next": "Prochain",
   "cta.submit": "Enregistrer",
   "cta.previous": "retour",
   "navbar.title.game": "Jeu",
   "navbar.title.settings": "Paramètres",
+  "navbar.title.seating": "Plan de table",
   "navbar.title.leaderboard": "Classement"
 }

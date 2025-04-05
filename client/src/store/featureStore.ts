@@ -40,6 +40,7 @@ export const useFeatureStore = create<FeatureStore>()(
           return value;
         },
       },
+      name: 'FeatureStore',
     }
   )
 );
