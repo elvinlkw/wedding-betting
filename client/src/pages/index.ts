@@ -8,3 +8,4 @@ export { SettingsPage } from './settings';
 export { AdminPage } from './admin';
 export { UserAnswers } from './userAnswers';
 export { FeaturesPage } from './features';
+export { DirectoryPage } from './directory';

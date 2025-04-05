@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { PATHS } from '../../routing';
+import Person2Icon from '@mui/icons-material/Person2';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
@@ -22,6 +23,11 @@ const navigationLinks = [
     path: PATHS.USER_ANSWERS_PAGE,
     label: 'Submissions',
     icon: <QuestionAnswerIcon />,
+  },
+  {
+    path: PATHS.DIRECTORY_PAGE,
+    label: 'Directory',
+    icon: <Person2Icon />,
   },
   {
     path: PATHS.FEATURES_PAGE,

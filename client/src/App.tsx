@@ -1,6 +1,7 @@
 import {
   AdminPage,
   BettingGamePage,
+  DirectoryPage,
   FeaturesPage,
   LeaderboardPage,
   LoginPage,
@@ -109,6 +110,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <FeaturesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="directory"
+              element={
+                <ProtectedRoute>
+                  <DirectoryPage />
                 </ProtectedRoute>
               }
             />
