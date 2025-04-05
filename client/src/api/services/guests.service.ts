@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import apiClient from '../interceptors';
 
 export type GuestBody = {
   firstName: string;
@@ -21,12 +21,14 @@ export type GuestResponse = {
 
 class Guests {
   async getAllGuests(): Promise<GuestResponse> {
-    const response = await axios.get('/api/guests');
+    const response = await apiClient.get('/api/guests');
     return response.data;
   }
 
   async getGuestsByTable(tableNumber: number): Promise<GuestResponse> {
-    const response = await axios.get(`/api/guests?tableNumber=${tableNumber}`);
+    const response = await apiClient.get(
+      `/api/guests?tableNumber=${tableNumber}`
+    );
     return response.data;
   }
 
@@ -37,7 +39,7 @@ class Guests {
       },
     };
 
-    const response = await axios.post('/api/guests', body, config);
+    const response = await apiClient.post('/api/guests', body, config);
     return response.data;
   }
 
@@ -47,7 +49,7 @@ class Guests {
         'x-auth-token': Cookies.get('jwttoken'),
       },
     };
-    const response = await axios.put(`/api/guests/${id}`, body, config);
+    const response = await apiClient.put(`/api/guests/${id}`, body, config);
     return response.data;
   }
 
@@ -57,7 +59,7 @@ class Guests {
         'x-auth-token': Cookies.get('jwttoken'),
       },
     };
-    const response = await axios.delete(`/api/guests/${id}`, config);
+    const response = await apiClient.delete(`/api/guests/${id}`, config);
     return response.data;
   }
 }
