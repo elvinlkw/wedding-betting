@@ -3,23 +3,23 @@
 ## English Questions
 
 - Number of wedding cake tiers?
-  - Under 2 | over 2
+  - Under 2 | Over 2
 - First dance length?
-  - Below 3 minutes | over 3 minutes
+  - Below 3 minutes | Over 3 minutes
 - Will the first dance be on an Ed Sheeran's song?
   - Yes | No
 - When will first dance take place?
-  - Before dinner | after dinner
+  - Before dinner | After dinner
 - Will Mary toss her bouquet?
   - Yes | No
 - Will Mary wear a party dress on the dancefloor?
   - Yes | No
 - Length of Best man's speech?
-  - Under 4 minutes | over 4 minutes
+  - Under 4 minutes | Over 4 minutes
 - Length of Maid of Honour's speech?
-  - Under 4 minutes | over 4 minutes
+  - Under 4 minutes | Over 4 minutes
 - How many people cry while giving their toasts?
-  - Under 2 | over 2
+  - Under 2 | Over 2
 
 ## French Questions
 
@@ -41,3 +41,16 @@
   - Moins de 4 minutes | Plus de 4 minutes
 - Combien de personnes pleureront en faisant leurs toasts?
   - Moins de 2 | Plus de 2
+
+# Feature Flags
+
+These feature flags are needed in the `features` table to make the application work properly.
+
+```tsx
+const FEATURE_CREATE_QUESTION = "admin:questions:create";
+const FEATURE_DELETE_QUESTION = "admin:questions:delete";
+const FEATURE_UPDATE_QUESTION = "admin:questions:update";
+const FEATURE_PLAY_GAME = "public:game:view";
+const FEATURE_SHOW_LOGIN_ICON_NAVBAR = "public:navbar:login";
+const FEATURE_SHOW_SEARING_CHART = "public:page:seating";
+```
