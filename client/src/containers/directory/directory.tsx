@@ -179,8 +179,8 @@ export const Directory = () => {
               label="Table Number"
             >
               {Array.from({ length: MAXIMUM_TABLE_NUMBER }, (_, i) => (
-                <MenuItem key={`table-number-menu-item-${i}`} value={i + 1}>
-                  {i + 1}
+                <MenuItem key={`table-number-menu-item-${i}`} value={i}>
+                  {i}
                 </MenuItem>
               ))}
             </Select>
