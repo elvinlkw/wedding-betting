@@ -38,7 +38,7 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-const MAXIMUM_TABLE_NUMBER = 17;
+const MAXIMUM_TABLE_NUMBER = 18;
 
 const DEFAULT_GUEST = {
   firstName: '',
@@ -178,11 +178,15 @@ export const Directory = () => {
               onChange={handleSelectChange}
               label="Table Number"
             >
-              {Array.from({ length: MAXIMUM_TABLE_NUMBER }, (_, i) => (
-                <MenuItem key={`table-number-menu-item-${i}`} value={i}>
-                  {i}
-                </MenuItem>
-              ))}
+              {Array.from({ length: MAXIMUM_TABLE_NUMBER }, (_, i) => {
+                if (i === 13) return null; // Skip table number 13
+
+                return (
+                  <MenuItem key={`table-number-menu-item-${i}`} value={i}>
+                    {i}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
