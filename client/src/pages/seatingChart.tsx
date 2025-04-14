@@ -69,6 +69,13 @@ export const SeatingChartPage = () => {
             }
             freeSolo
             onChange={handleGuestChange}
+            slotProps={{
+              listbox: {
+                sx: {
+                  maxHeight: '275px',
+                },
+              },
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
