@@ -72,7 +72,7 @@ export const SeatingChartPage = () => {
             slotProps={{
               listbox: {
                 sx: {
-                  maxHeight: '275px',
+                  maxHeight: '220px',
                 },
               },
             }}
