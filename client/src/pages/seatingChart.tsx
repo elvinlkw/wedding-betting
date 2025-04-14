@@ -94,7 +94,7 @@ export const SeatingChartPage = () => {
           {filteredGuests.length > 0 ? (
             <List>
               {filteredGuests.map((guest) => {
-                if (guest.tableNumber) {
+                if (guest.tableNumber !== null) {
                   return (
                     <Link
                       to={`/seating-chart/${guest.tableNumber}`}

@@ -174,7 +174,7 @@ export const Directory = () => {
               labelId="table-number-label"
               id="table-number-label"
               name="tableNumber"
-              value={guestToEdit?.tableNumber || null}
+              value={guestToEdit?.tableNumber ?? ''}
               onChange={handleSelectChange}
               label="Table Number"
             >
