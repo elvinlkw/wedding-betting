@@ -5,12 +5,14 @@ import { GameQuestion } from '../../api/services/questions.service';
 import { Header } from '../../components';
 import { NameField } from './components/nameField';
 import { NavigationButton } from './components/navigationButtons';
+import Snackbar from '@mui/material/Snackbar';
 import { QuestionItem } from './components/questionItem';
 import styled from '@emotion/styled';
 import theme from '../../theme';
 import { useCreateUserAnswer } from '../../api/hooks/useUserAnswers';
 import { useFeatureFlag } from '../../hooks';
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 
 const Form = styled.form({
   display: 'flex',
@@ -38,6 +40,7 @@ export const BettingGameContainer = ({
   const [pageState, setPageState] = useState(0);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<FormValues>({
     firstName: '',
     lastName: '',
@@ -49,7 +52,7 @@ export const BettingGameContainer = ({
 
   const canPlayGame = useFeatureFlag(FEATURE_PLAY_GAME);
 
-  const { mutateAsync: createUserAnswer } = useCreateUserAnswer();
+  const { mutateAsync: createUserAnswer, isPending } = useCreateUserAnswer();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prevValues) => ({
@@ -86,7 +89,19 @@ export const BettingGameContainer = ({
       await createUserAnswer(formValues);
       setIsSubmitSuccessful(true);
     } catch (err) {
-      console.error(err);
+      const error = err as AxiosError;
+      console.error(error);
+      if (error.status === 409) {
+        setErrorMessage(
+          intl.formatMessage({
+            id: 'homepage.form.error.duplicate',
+            defaultMessage: 'An answer with this name already exists',
+          })
+        );
+        return;
+      }
+
+      setErrorMessage('An unexpected error occurred. Please try again later.');
     }
   };
 
@@ -250,6 +265,7 @@ export const BettingGameContainer = ({
           <NavigationButton
             totalCount={gameQuestions.length}
             currentPage={pageState}
+            isPending={isPending}
             onSubmit={handleSubmit}
             onPreviousClick={() =>
               setPageState((prev) => Math.max(0, prev - 1))
@@ -261,6 +277,18 @@ export const BettingGameContainer = ({
           />
         </Form>
       )}
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={4000}
+        onClose={() => setErrorMessage(null)}
+        message={
+          <Typography sx={{ fontSize: '16px' }}>{errorMessage}</Typography>
+        }
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      />
     </div>
   );
 };

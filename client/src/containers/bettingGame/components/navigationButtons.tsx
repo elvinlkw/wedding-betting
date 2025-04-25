@@ -6,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import theme from '../../../theme';
-import { useFormStatus } from 'react-dom';
 import { useScreenOrientation } from '../../../hooks';
 
 type NavigationButtonProps = {
@@ -16,6 +15,7 @@ type NavigationButtonProps = {
   currentPage: number;
   totalCount: number;
   formError: string | null;
+  isPending: boolean;
 };
 
 export const NavigationButton = ({
@@ -25,10 +25,9 @@ export const NavigationButton = ({
   currentPage,
   totalCount,
   formError,
+  isPending,
 }: NavigationButtonProps) => {
   const { isPortrait } = useScreenOrientation();
-
-  const status = useFormStatus();
 
   return (
     <Box
@@ -79,7 +78,8 @@ export const NavigationButton = ({
           <Button
             variant="contained"
             onClick={currentPage === totalCount ? onSubmit : onNextClick}
-            disabled={status.pending}
+            disabled={isPending}
+            loading={isPending}
           >
             {currentPage === totalCount ? (
               <FormattedMessage id="cta.submit" defaultMessage="Submit" />

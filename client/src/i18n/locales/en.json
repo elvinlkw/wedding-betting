@@ -10,6 +10,7 @@
   "homepage.closed.description": "The host of today's game has now ended the wedding betting game.",
   "homepage.form.error.name": "Please provide your name",
   "homepage.form.error.answers": "Please answer all questions",
+  "homepage.form.error.duplicate": "An answer with this name already exists",
   "homepage.success.message": "Thank you for participating. Your answer has been successfully registered. Enjoy the rest of the day!",
   "leaderboard.header.title": "Leaderboard",
   "leaderboard.header.subtitle": "Check who's leading the charge!!",

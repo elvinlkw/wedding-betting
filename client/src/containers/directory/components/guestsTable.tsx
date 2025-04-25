@@ -20,7 +20,10 @@ type GuestTableProps = {
 
 export const GuestsTable = ({ guests, onEdit, onDelete }: GuestTableProps) => {
   return (
-    <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
+    <TableContainer
+      component={Paper}
+      sx={{ marginTop: '20px', paddingBottom: '80px' }}
+    >
       <Table>
         <TableHead>
           <TableRow>

@@ -10,6 +10,7 @@
   "homepage.closed.description": "L'hôte du jeu d'aujourd'hui a maintenant terminé le jeu de pari de mariage.",
   "homepage.form.error.name": "Veuillez fournir votre nom",
   "homepage.form.error.answers": "Veuillez répondre à toutes les questions",
+  "homepage.form.error.duplicate": "Une reponse avec ce nom existe déjà",
   "homepage.success.message": "Merci de votre participation. Votre réponse a été enregistrée avec succès. Profitez du reste de la journée !",
   "leaderboard.header.title": "Classement",
   "leaderboard.header.subtitle": "Regardez qui mène la charge!!",
