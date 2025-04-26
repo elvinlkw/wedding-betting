@@ -9,6 +9,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import { useUserAnswers } from '../api/hooks/useUserAnswers';
+import { useLeaderboard } from '../api/hooks/useLeaderboard';
+import {
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  Tabs,
+  Tab,
+  Container,
+} from '@mui/material';
+import { useState } from 'react';
 
 interface HeadCell {
   disablePadding: boolean;
@@ -34,8 +45,12 @@ const headCells: readonly HeadCell[] = [
 
 export const UserAnswers = () => {
   const { data, isLoading } = useUserAnswers();
+  const { data: leaderboardData, isLoading: isLeaderboardLoading } =
+    useLeaderboard();
 
-  if (isLoading) {
+  const [tab, setTab] = useState(0);
+
+  if (isLoading || isLeaderboardLoading) {
     return <Spinner />;
   }
 
@@ -50,49 +65,91 @@ export const UserAnswers = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Header title="User Answers" />
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <TableHead>
-              <TableRow>
-                {headCells.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    align={'left'}
-                    padding={'normal'}
-                  >
-                    {headCell.label}
-                  </TableCell>
-                ))}
-                {data?.[0].answers.map((answer) => (
-                  <TableCell key={`question-${answer.questionId}`}>
-                    {answer.questionText}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data?.map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.userId}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell>{row.firstName}</TableCell>
-                    <TableCell>{row.lastName}</TableCell>
-                    {row.answers.map((answer) => (
-                      <TableCell>{answer.choiceText}</TableCell>
+
+      <Container>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={tab}
+            onChange={(_, newValue) => setTab(newValue)}
+            aria-label="basic tabs example"
+          >
+            <Tab label="User Answers" />
+            <Tab label="Scoreboard" />
+          </Tabs>
+        </Box>
+
+        {/* Scoreboard section */}
+        {tab === 1 && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginBottom: 2,
+            }}
+          >
+            {leaderboardData?.userScoreboard.map((user, idx) => {
+              return (
+                <ListItem>
+                  <ListItemAvatar key={user.userId}>
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>{idx + 1}</Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${user.firstName} ${user.lastName}`}
+                    secondary={`Correct: ${user.percentCorrect}%`}
+                  />
+                </ListItem>
+              );
+            })}
+          </Box>
+        )}
+
+        {tab === 0 && (
+          <Paper sx={{ width: '100%', mb: 2 }}>
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <TableHead>
+                  <TableRow>
+                    {headCells.map((headCell) => (
+                      <TableCell
+                        key={headCell.id}
+                        align={'left'}
+                        padding={'normal'}
+                      >
+                        {headCell.label}
+                      </TableCell>
+                    ))}
+                    {data?.[0].answers.map((answer) => (
+                      <TableCell key={`question-${answer.questionId}`}>
+                        {answer.questionText}
+                      </TableCell>
                     ))}
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+                </TableHead>
+                <TableBody>
+                  {data?.map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.userId}
+                        sx={{ cursor: 'pointer' }}
+                      >
+                        <TableCell>{row.firstName}</TableCell>
+                        <TableCell>{row.lastName}</TableCell>
+                        {row.answers.map((answer) => (
+                          <TableCell>{answer.choiceText}</TableCell>
+                        ))}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        )}
+      </Container>
     </Box>
   );
 };
