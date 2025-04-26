@@ -184,7 +184,7 @@ export const LeaderboardPage = () => {
           )}
 
           {currentTab === 'answers' && (
-            <div>
+            <Box sx={{ py: 2 }}>
               {revealedQuestionsData?.map((question) => {
                 return (
                   <Paper sx={{ p: 2, m: 2 }}>
@@ -206,7 +206,7 @@ export const LeaderboardPage = () => {
                   </Paper>
                 );
               })}
-            </div>
+            </Box>
           )}
         </Container>
       )}
