@@ -35,7 +35,10 @@ export const getAllQuestions = async (req: Request, res: Response) => {
     const includeRevealed = req.query.includeRevealed === 'true';
 
     const allQuestions = includeChoices
-      ? await questionsRepository.findAllWithChoices({ includeRevealed })
+      ? await questionsRepository.findAllWithChoices({
+          includeRevealed,
+          isAdmin: includeRevealed,
+        })
       : await questionsRepository.findAll();
     const response = {
       count: allQuestions.rowCount,

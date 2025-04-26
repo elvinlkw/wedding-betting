@@ -3,6 +3,7 @@ import apiClient from '../interceptors';
 type Choice = {
   choiceId: number;
   choiceText: string;
+  isRightAnswer?: boolean;
 };
 
 export type GameQuestion = {
@@ -13,14 +14,21 @@ export type GameQuestion = {
 };
 
 class Questions {
-  async getGameQuestions(): Promise<GameQuestion[]> {
+  async getGameQuestions(
+    revealedOnly: boolean = false
+  ): Promise<GameQuestion[]> {
     const gameLanguage = localStorage.getItem('gameLanguage') || 'en';
 
-    const response = await apiClient.get('/api/questions?includeChoices=true', {
-      headers: {
-        'Accept-Language': gameLanguage,
-      },
-    });
+    const response = await apiClient.get(
+      `/api/questions?includeChoices=true&${
+        revealedOnly ? 'includeRevealed=true' : ''
+      }`,
+      {
+        headers: {
+          'Accept-Language': gameLanguage,
+        },
+      }
+    );
     return response.data.data;
   }
 }
