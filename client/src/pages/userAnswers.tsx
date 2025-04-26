@@ -66,7 +66,7 @@ export const UserAnswers = () => {
     <Box sx={{ width: '100%' }}>
       <Header title="User Answers" />
 
-      <Container>
+      <Container sx={{ pb: 6 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
             value={tab}
