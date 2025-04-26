@@ -63,3 +63,12 @@ CREATE TABLE guests (
   created_at TIMESTAMP DEFAULT current_timestamp,
   updated_at TIMESTAMP DEFAULT current_timestamp
 );
+
+INSERT INTO features (feature_key, feature_name, feature_description, is_enabled)
+VALUES
+  ('admin:questions:create', 'Create Question', 'Allows admin to create questions', TRUE),
+  ('admin:questions:delete', 'Delete Question', 'Allows admin to delete questions', TRUE),
+  ('admin:questions:update', 'Update Question', 'Allows admin to update questions', TRUE),
+  ('public:game:view', 'Play Game', 'Allows public users to view and play the game', TRUE),
+  ('public:navbar:login', 'Show Login Icon in Navbar', 'Displays login icon in the navigation bar', TRUE),
+  ('public:page:seating', 'Show Seating Chart', 'Displays the seating chart on the public page', TRUE);
