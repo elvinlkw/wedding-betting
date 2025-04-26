@@ -15,24 +15,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag.hooks';
 import FlatwareIcon from '@mui/icons-material/Flatware';
 
-const navigationLinks = [
-  {
-    path: '/',
-    label: <FormattedMessage id="navbar.title.game" />,
-    icon: <GamesIcon />,
-  },
-  {
-    path: '/leaderboard',
-    label: <FormattedMessage id="navbar.title.leaderboard" />,
-    icon: <LeaderboardIcon />,
-  },
-  {
-    path: '/settings',
-    label: <FormattedMessage id="navbar.title.settings" />,
-    icon: <SettingsIcon />,
-  },
-];
-
 export const BottomNavbar = () => {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
@@ -43,7 +25,16 @@ export const BottomNavbar = () => {
 
   const navlinks = useMemo(() => {
     return [
-      ...navigationLinks,
+      {
+        path: '/',
+        label: <FormattedMessage id="navbar.title.game" />,
+        icon: <GamesIcon />,
+      },
+      {
+        path: '/leaderboard',
+        label: <FormattedMessage id="navbar.title.leaderboard" />,
+        icon: <LeaderboardIcon />,
+      },
       ...(showSeatingChart
         ? [
             {
@@ -53,6 +44,11 @@ export const BottomNavbar = () => {
             },
           ]
         : []),
+      {
+        path: '/settings',
+        label: <FormattedMessage id="navbar.title.settings" />,
+        icon: <SettingsIcon />,
+      },
       ...(showLoginIcon
         ? [
             {

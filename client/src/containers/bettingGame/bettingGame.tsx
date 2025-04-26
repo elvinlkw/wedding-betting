@@ -152,7 +152,10 @@ export const BettingGameContainer = ({
               navigate('/leaderboard');
             }}
           >
-            Go to Leaderboard
+            <FormattedMessage
+              id="homepage.cta.leaderboard"
+              defaultMessage="Check the leaderboard"
+            />
           </Button>
         </Container>
       </div>
