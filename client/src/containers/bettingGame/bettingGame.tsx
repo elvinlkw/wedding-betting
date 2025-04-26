@@ -1,4 +1,4 @@
-import { Chip, Container, Stack, Typography } from '@mui/material';
+import { Button, Chip, Container, Stack, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { FEATURE_PLAY_GAME } from '../../features';
 import { GameQuestion } from '../../api/services/questions.service';
@@ -13,6 +13,7 @@ import { useCreateUserAnswer } from '../../api/hooks/useUserAnswers';
 import { useFeatureFlag } from '../../hooks';
 import { useState } from 'react';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router';
 
 const Form = styled.form({
   display: 'flex',
@@ -51,6 +52,7 @@ export const BettingGameContainer = ({
   });
 
   const canPlayGame = useFeatureFlag(FEATURE_PLAY_GAME);
+  const navigate = useNavigate();
 
   const { mutateAsync: createUserAnswer, isPending } = useCreateUserAnswer();
 
@@ -126,14 +128,32 @@ export const BettingGameContainer = ({
           sx={{
             display: 'flex',
             justifyContent: 'center',
+            flexDirection: 'column',
+            pt: 2,
           }}
         >
-          <Typography>
+          <Typography fontSize={20} justifyContent="center" textAlign="center">
             <FormattedMessage
               id="homepage.closed.description"
               defaultMessage="The host of today's game has now ended the wedding betting game."
             />
           </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              mt: 2,
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.common.white,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+            }}
+            onClick={() => {
+              navigate('/leaderboard');
+            }}
+          >
+            Go to Leaderboard
+          </Button>
         </Container>
       </div>
     );
