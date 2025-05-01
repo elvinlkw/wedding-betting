@@ -120,6 +120,7 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
                 name={`choices.${index}.text`}
                 sx={{ width: '100%' }}
                 type="text"
+                placeholder="English choice"
               />
             )}
             control={control}
@@ -133,6 +134,7 @@ const ChoicesArrayField = ({ control, setValue }: ChoicesArrayField) => {
                 name={`choices.${index}.textFr`}
                 sx={{ width: '100%' }}
                 type="text"
+                placeholder="French choice"
               />
             )}
             control={control}
