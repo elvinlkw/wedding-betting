@@ -40,7 +40,7 @@ export const findAllWithChoices = ({
   QueryResult<QuestionWithChoicesResponse>
 > => {
   const whereClause =
-    includeRevealed === false ? `WHERE q.is_answer_revealed = FALSE` : '';
+    includeRevealed === true ? `WHERE q.is_answer_revealed = TRUE` : '';
 
   return pool.query(`SELECT 
     q.question_id,

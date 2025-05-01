@@ -12,8 +12,9 @@ export const Header = ({ title, content }: HeaderProps) => {
     <Box
       sx={{
         p: '54px 32px',
-        background:
-          'linear-gradient(0.25turn,rgb(88, 138, 159), rgb(223, 156, 84))',
+        background: `url('https://t3.ftcdn.net/jpg/07/47/42/72/240_F_747427235_2S80Zm5ulippYLRcrT3gepPCgUXrOdfv.jpg'), linear-gradient(180deg, #E2D3CE 0%, #E3D4CD 100%)`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100%',
       }}
     >
       <Typography

@@ -14,24 +14,7 @@ import Paper from '@mui/material/Paper';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag.hooks';
 import FlatwareIcon from '@mui/icons-material/Flatware';
-
-const navigationLinks = [
-  {
-    path: '/',
-    label: <FormattedMessage id="navbar.title.game" />,
-    icon: <GamesIcon />,
-  },
-  {
-    path: '/leaderboard',
-    label: <FormattedMessage id="navbar.title.leaderboard" />,
-    icon: <LeaderboardIcon />,
-  },
-  {
-    path: '/settings',
-    label: <FormattedMessage id="navbar.title.settings" />,
-    icon: <SettingsIcon />,
-  },
-];
+import Cookies from 'js-cookie';
 
 export const BottomNavbar = () => {
   const [value, setValue] = useState(0);
@@ -41,9 +24,20 @@ export const BottomNavbar = () => {
   const showLoginIcon = useFeatureFlag(FEATURE_SHOW_LOGIN_ICON_NAVBAR);
   const showSeatingChart = useFeatureFlag(FEATURE_SHOW_SEARING_CHART);
 
+  const hasLoginToken = Cookies.get('jwttoken') !== undefined;
+
   const navlinks = useMemo(() => {
     return [
-      ...navigationLinks,
+      {
+        path: '/',
+        label: <FormattedMessage id="navbar.title.game" />,
+        icon: <GamesIcon />,
+      },
+      {
+        path: '/leaderboard',
+        label: <FormattedMessage id="navbar.title.leaderboard" />,
+        icon: <LeaderboardIcon />,
+      },
       ...(showSeatingChart
         ? [
             {
@@ -53,7 +47,12 @@ export const BottomNavbar = () => {
             },
           ]
         : []),
-      ...(showLoginIcon
+      {
+        path: '/settings',
+        label: <FormattedMessage id="navbar.title.settings" />,
+        icon: <SettingsIcon />,
+      },
+      ...(showLoginIcon || hasLoginToken
         ? [
             {
               path: '/login',
@@ -63,7 +62,7 @@ export const BottomNavbar = () => {
           ]
         : []),
     ];
-  }, [showLoginIcon, showSeatingChart]);
+  }, [showLoginIcon, showSeatingChart, hasLoginToken]);
 
   useEffect(() => {
     const currentIndex = navlinks.findIndex((link) => {
